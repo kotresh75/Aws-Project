@@ -1,0 +1,38 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+Thumbs.db
+*.log
+
+# Node modules (frontend)
+frontend/node_modules/
+frontend/package-lock.json
+frontend/yarn.lock
+
+# Python virtual environment and cache (backend)
+backend/venv/
+backend/env/
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.egg-info/
+backend/.pytest_cache/
+
+# Build and dist folders
+frontend/build/
+frontend/dist/
+
+# Misc
+*.tmp
+*.bak
