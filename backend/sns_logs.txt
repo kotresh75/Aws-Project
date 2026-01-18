@@ -1,0 +1,200 @@
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T16:35:41.266732
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Received: Database Design
+BODY:  Dear Student Member,
+
+Your request for 'Database Design' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T16:35:41.268257
+TOPIC: StaffAlert
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Database Design
+BODY:  Student Student Member (student@gmail.com) has requested 'Database Design'.
+Status: Pending.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T16:35:52.610859
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Received: Web Development with Flask
+BODY:  Dear Student Member,
+
+Your request for 'Web Development with Flask' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T16:35:52.611860
+TOPIC: StaffAlert
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Web Development with Flask
+BODY:  Student Student Member (student@gmail.com) has requested 'Web Development with Flask'.
+Status: Pending.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T16:36:41.130210
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Update: Database Design
+BODY:  Your request for 'Database Design' has been updated to: APPROVED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T16:36:44.373845
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Update: Web Development with Flask
+BODY:  Your request for 'Web Development with Flask' has been updated to: REJECTED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T17:06:46.771522
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Received: Database Design
+BODY:  Dear Student Member,
+
+Your request for 'Database Design' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T17:06:46.772469
+TOPIC: StaffNotification
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Database Design
+BODY:  Student Student Member has requested 'Database Design'.
+Role No: 
+Status: Pending
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T17:09:00.768995
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Update: Database Design
+BODY:  Your request for 'Database Design' has been updated to: APPROVED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T17:09:07.654913
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Update: Database Design
+BODY:  Your request for 'Database Design' has been updated to: COMPLETED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T18:03:16.009389
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Received: Introduction to Algorithms
+BODY:  Dear Student Member,
+
+Your request for 'Introduction to Algorithms' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T18:03:16.010390
+TOPIC: StaffNotification
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Introduction to Algorithms
+BODY:  Student Student Member has requested 'Introduction to Algorithms'.
+Role No: 
+Status: Pending
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T18:05:49.606003
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Update: Introduction to Algorithms
+BODY:  Your request for 'Introduction to Algorithms' has been updated to: REJECTED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T20:02:23.381393
+TOPIC: StudentNotification
+TO:    student1@gmail.com
+SUBJ:  Request Received: Introduction to Algorithms
+BODY:  Dear student1,
+
+Your request for 'Introduction to Algorithms' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T20:02:23.431341
+TOPIC: StaffNotification
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Introduction to Algorithms
+BODY:  Student student1 has requested 'Introduction to Algorithms'.
+Role No: 123
+Status: Pending
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T20:02:32.305008
+TOPIC: StudentNotification
+TO:    student1@gmail.com
+SUBJ:  Request Received: Web Development with Flask
+BODY:  Dear student1,
+
+Your request for 'Web Development with Flask' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T20:02:32.306003
+TOPIC: StaffNotification
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Web Development with Flask
+BODY:  Student student1 has requested 'Web Development with Flask'.
+Role No: 123
+Status: Pending
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T20:03:24.631917
+TOPIC: StudentNotification
+TO:    student1@gmail.com
+SUBJ:  Request Update: Introduction to Algorithms
+BODY:  Your request for 'Introduction to Algorithms' has been updated to: APPROVED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T20:03:26.640553
+TOPIC: StudentNotification
+TO:    student1@gmail.com
+SUBJ:  Request Update: Web Development with Flask
+BODY:  Your request for 'Web Development with Flask' has been updated to: REJECTED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T20:03:54.275003
+TOPIC: StudentNotification
+TO:    student1@gmail.com
+SUBJ:  Request Update: Introduction to Algorithms
+BODY:  Your request for 'Introduction to Algorithms' has been updated to: COMPLETED.
+============================================================

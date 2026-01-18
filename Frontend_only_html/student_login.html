@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="page-center">
+        <div class="glass-card" style="max-width: 420px; width: 100%;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1
+                    style="font-size: 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Student Login</h1>
+                <p style="color: var(--text-muted);">Welcome back to Instant Library</p>
+            </div>
+
+            <form id="loginForm">
+                <input type="email" id="email" required placeholder="Enter your email" style="margin-bottom:1rem;">
+                <input type="password" id="password" required placeholder="••••••••" style="margin-bottom:1rem;">
+                <div id="error-msg" class="error-message" style="display: none;"></div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem;">Sign In</button>
+            </form>
+
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <a href="index.html" style="color: var(--text-muted);">← Back to Role Selection</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errDiv = document.getElementById('error-msg');
+
+            try {
+                const res = await fetch('http://localhost:5000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email.toLowerCase(), password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.role !== 'student') {
+                        errDiv.textContent = 'Access Restricted: Please use Staff Login.';
+                        errDiv.style.display = 'block';
+                        return;
+                    }
+                    localStorage.setItem('user', JSON.stringify({ ...data, role: 'student' })); // Ensure role is set
+                    window.location.href = 'student_dashboard.html';
+                } else {
+                    errDiv.textContent = data.error || 'Login failed';
+                    errDiv.style.display = 'block';
+                }
+            } catch (e) {
+                errDiv.textContent = 'Server Check Failed';
+                errDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -5,30 +5,40 @@ const Breadcrumb = ({ pageTitle }) => {
     const location = useLocation();
 
     const getBreadcrumbItems = () => {
-        // Default home item
+        const routeMap = {
+            '/dashboard': 'Dashboard',
+            '/catalog': 'Book Catalog',
+            '/requests': 'My Requests',
+            '/book-management': 'Manage Books',
+            '/request-management': 'Manage Requests',
+            '/student-management': 'Student Management',
+            '/staff-management': 'Staff Management',
+            '/profile': 'Profile',
+            '/settings': 'Settings',
+            '/notifications': 'Notifications',
+            '/request-history': 'Request History',
+            '/about': 'About'
+        };
+
         const items = [
             { label: 'Dashboard', path: '/dashboard' }
         ];
 
-        // Add current page based on location
         const pathname = location.pathname;
 
-        if (pathname.includes('/book-catalog')) {
-            items.push({ label: 'Book Catalog', path: '/book-catalog' });
-        } else if (pathname.includes('/request-history')) {
-            items.push({ label: 'Request History', path: '/request-history' });
-        } else if (pathname.includes('/book-management')) {
-            items.push({ label: 'Book Management', path: '/book-management' });
-        } else if (pathname.includes('/request-management')) {
-            items.push({ label: 'Request Management', path: '/request-management' });
-        } else if (pathname.includes('/profile')) {
-            items.push({ label: 'Profile', path: '/profile' });
-        } else if (pathname.includes('/settings')) {
-            items.push({ label: 'Settings', path: '/settings' });
-        } else if (pathname.includes('/notifications')) {
-            items.push({ label: 'Notifications', path: '/notifications' });
-        } else if (pathname.includes('/staff-management')) {
-            items.push({ label: 'Staff Management', path: '/staff-management' });
+        // If we are on dashboard, return just the dashboard item
+        if (pathname === '/dashboard') {
+            return items;
+        }
+
+        const mappedLabel = routeMap[pathname];
+
+        if (mappedLabel) {
+            // If path is known, use the mapped label (ignore pageTitle to avoid duplicates)
+            items.push({ label: mappedLabel, path: pathname });
+        } else if (pageTitle) {
+            // Fallback to pageTitle for unknown routes
+            items.push({ label: pageTitle, path: pathname });
         }
 
         return items;
@@ -50,14 +60,6 @@ const Breadcrumb = ({ pageTitle }) => {
                     )}
                 </div>
             ))}
-            {pageTitle && (
-                <>
-                    <span className="breadcrumb-separator">/</span>
-                    <div className="breadcrumb-item">
-                        <span className="active">{pageTitle}</span>
-                    </div>
-                </>
-            )}
         </div>
     );
 };

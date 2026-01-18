@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Instant Library</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="page-center">
+        <div class="glass-card" style="max-width: 900px; width: 100%; padding: 3rem; text-align: center;">
+            <div style="margin-bottom: 3rem;">
+                <h1
+                    style="font-size: 3rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">
+                    Welcome Back
+                </h1>
+                <p style="color: var(--text-muted); font-size: 1.2rem;">Please select your role to login</p>
+            </div>
+
+            <div class="features-grid" style="gap: 2rem; margin: 0; max-width: none;">
+                <!-- Student Card -->
+                <div onclick="window.location.href='student_login.html'" class="feature-card"
+                    style="cursor: pointer; transition: transform 0.2s; background: rgba(255,255,255,0.4);">
+                    <div
+                        style="font-size: 3rem; margin-bottom: 1rem; background: #dbeafe; width: 80px; height: 80px; display: flex; align-items: center; justifyContent: center; border-radius: 50%; margin: 0 auto 1rem;">
+                        🎓</div>
+                    <h3>Student</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Access book catalog, request books, and
+                        view your history.</p>
+                    <button class="btn-primary" style="width: 100%;">Student Login</button>
+                </div>
+
+                <!-- Staff Card -->
+                <div onclick="window.location.href='staff_login.html'" class="feature-card"
+                    style="cursor: pointer; transition: transform 0.2s; background: rgba(255,255,255,0.4);">
+                    <div
+                        style="font-size: 3rem; margin-bottom: 1rem; background: #fef3c7; width: 80px; height: 80px; display: flex; align-items: center; justifyContent: center; border-radius: 50%; margin: 0 auto 1rem;">
+                        👨‍💼</div>
+                    <h3>Staff</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Manage inventory, process requests, and
+                        track circulation.</p>
+                    <button class="btn-primary"
+                        style="width: 100%; background: linear-gradient(135deg, var(--secondary), #b45309);">Staff
+                        Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
