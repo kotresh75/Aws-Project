@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Staff Management - Instant Library">
+    <title>Add Staff - Instant Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/header-footer.css">
+</head>
+
+<body>
+    <div class="app-container sidebar-open">
+        <main>
+            <div style="padding: 2rem; max-width: 600px; margin: 0 auto;">
+                <div class="glass-card">
+                    <h1
+                        style="font-size: 2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
+                        👥 Add New Staff
+                    </h1>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">Register a new library staff member</p>
+
+                    <div id="message-container" style="margin-bottom: 1rem;"></div>
+
+                    <form id="staff-form">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" required placeholder="Enter staff name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" required placeholder="Enter staff email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password *</label>
+                            <input type="password" id="password" required placeholder="Minimum 6 characters"
+                                minlength="6">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password *</label>
+                            <input type="password" id="confirm-password" required placeholder="Re-enter password">
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="btn-primary"
+                            style="width: 100%; margin-top: 1rem; padding: 1rem;">
+                            Create Staff Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        const user = requireAuth();
+        if (user && user.role !== 'staff') {
+            window.location.href = 'unauthorized.html';
+        }
+
+        document.getElementById('staff-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const submitBtn = document.getElementById('submit-btn');
+
+            // Validation
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match', true);
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters', true);
+                return;
+            }
+
+            setButtonLoading(submitBtn, 'Creating...');
+
+            try {
+                await apiPost('/admin/register-staff', {
+                    caller_email: user.email,
+                    name,
+                    email,
+                    password
+                });
+
+                showMessage('Staff account created successfully!');
+                document.getElementById('staff-form').reset();
+            } catch (error) {
+                showMessage(error.message || 'Failed to create staff account', true);
+            } finally {
+                resetButton(submitBtn);
+            }
+        });
+
+        function showMessage(msg, isError = false) {
+            document.getElementById('message-container').innerHTML = `<div class="${isError ? 'error-message' : 'success-message'}">${msg}</div>`;
+            if (!isError) {
+                setTimeout(() => document.getElementById('message-container').innerHTML = '', 5000);
+            }
+        }
+    </script>
+</body>
+
+</html>

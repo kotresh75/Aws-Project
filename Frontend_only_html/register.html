@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student Registration - Instant Library">
+    <title>Register - Instant Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/app.css">
+</head>
+
+<body>
+    <div class="page-center">
+        <div class="glass-card" style="max-width: 500px; width: 100%;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1
+                    style="font-size: 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
+                    Student Registration
+                </h1>
+                <p style="color: var(--text-muted);">Create your Instant Library account</p>
+            </div>
+
+            <!-- Step 1: Registration Form -->
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Minimum 6 characters"
+                        minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                        placeholder="Re-enter password">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="roll_no">Roll Number</label>
+                        <input type="text" id="roll_no" name="roll_no" placeholder="e.g., S101">
+                    </div>
+                    <div class="form-group">
+                        <label for="semester">Semester</label>
+                        <input type="text" id="semester" name="semester" placeholder="e.g., 3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <input type="text" id="year" name="year" placeholder="e.g., 2">
+                </div>
+
+                <div id="error-container" style="display: none;"></div>
+                <div id="success-container" style="display: none;"></div>
+
+                <button type="submit" id="submit-btn" class="btn-primary"
+                    style="width: 100%; margin-top: 1rem; padding: 1rem;">
+                    Register
+                </button>
+            </form>
+
+            <!-- Step 2: OTP Verification (hidden initially) -->
+            <form id="otp-form" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-muted);">Enter the 6-digit OTP sent to your email</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">(Check the terminal for
+                        OTP in development)</p>
+                </div>
+                <div class="form-group">
+                    <label for="otp">OTP Code</label>
+                    <input type="text" id="otp" name="otp" required placeholder="Enter 6-digit OTP" maxlength="6"
+                        style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;">
+                </div>
+
+                <div id="otp-error-container" style="display: none;"></div>
+                <div id="otp-success-container" style="display: none;"></div>
+
+                <button type="submit" id="verify-btn" class="btn-primary"
+                    style="width: 100%; margin-top: 1rem; padding: 1rem;">
+                    Verify OTP
+                </button>
+            </form>
+
+            <div
+                style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1); text-align: center;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Already have an account? <a href="student-login.html" style="font-weight: 600;">Login here</a>
+                </p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="index.html" style="color: var(--text-muted); font-size: 0.9rem;">← Back to Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let registeredEmail = '';
+
+        // Registration form submit
+        document.getElementById('register-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const roll_no = document.getElementById('roll_no').value.trim();
+            const semester = document.getElementById('semester').value.trim();
+            const year = document.getElementById('year').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+
+            hideMessage('error-container');
+            hideMessage('success-container');
+
+            // Validation
+            if (password !== confirmPassword) {
+                showError('Passwords do not match', 'error-container');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters', 'error-container');
+                return;
+            }
+
+            setButtonLoading(submitBtn, 'Registering...');
+
+            try {
+                await apiPost('/register/student', {
+                    name,
+                    email,
+                    password,
+                    roll_no,
+                    semester,
+                    year
+                });
+
+                registeredEmail = email;
+
+                // Show OTP form
+                document.getElementById('register-form').style.display = 'none';
+                document.getElementById('otp-form').style.display = 'block';
+
+            } catch (error) {
+                showError(error.message || 'Registration failed', 'error-container');
+                resetButton(submitBtn);
+            }
+        });
+
+        // OTP verification form submit
+        document.getElementById('otp-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const otp = document.getElementById('otp').value.trim();
+            const verifyBtn = document.getElementById('verify-btn');
+
+            hideMessage('otp-error-container');
+
+            if (!otp || otp.length !== 6) {
+                showError('Please enter a valid 6-digit OTP', 'otp-error-container');
+                return;
+            }
+
+            setButtonLoading(verifyBtn, 'Verifying...');
+
+            try {
+                await apiPost('/verify-registration-otp', {
+                    email: registeredEmail,
+                    otp
+                });
+
+                // Show success and redirect
+                showSuccess('Registration successful! Redirecting to login...', 'otp-success-container');
+                setTimeout(() => {
+                    window.location.href = 'student-login.html';
+                }, 2000);
+
+            } catch (error) {
+                showError(error.message || 'OTP verification failed', 'otp-error-container');
+                resetButton(verifyBtn);
+            }
+        });
+    </script>
+</body>
+
+</html>

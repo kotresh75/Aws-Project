@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Profile - Instant Library">
+    <title>Profile - Instant Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/header-footer.css">
+</head>
+
+<body>
+    <div class="app-container sidebar-open">
+        <main>
+            <div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+                <div class="glass-card">
+                    <h1
+                        style="font-size: 2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 2rem;">
+                        👤 My Profile
+                    </h1>
+
+                    <div id="message-container" style="margin-bottom: 1rem;"></div>
+
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" disabled
+                                style="background: #f3f4f6; cursor: not-allowed;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <input type="text" id="role" name="role" disabled
+                                style="background: #f3f4f6; cursor: not-allowed;">
+                        </div>
+
+                        <div id="student-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label for="roll_no">Roll Number</label>
+                                <input type="text" id="roll_no" name="roll_no">
+                            </div>
+                            <div class="form-group">
+                                <label for="semester">Semester</label>
+                                <input type="text" id="semester" name="semester">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label for="year">Year</label>
+                                <input type="text" id="year" name="year">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="save-btn" class="btn-primary"
+                            style="width: 100%; margin-top: 1rem; padding: 1rem;">
+                            Save Changes
+                        </button>
+                    </form>
+
+                    <!-- Change Password Section -->
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(0,0,0,0.1);">
+                        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">🔐 Change Password</h2>
+
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input type="password" id="current-password" name="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input type="password" id="new-password" name="newPassword" required minlength="6"
+                                    placeholder="Minimum 6 characters">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm New Password</label>
+                                <input type="password" id="confirm-password" name="confirmPassword" required>
+                            </div>
+
+                            <div id="password-message" style="margin-bottom: 1rem;"></div>
+
+                            <button type="submit" id="change-password-btn" class="btn-secondary"
+                                style="width: 100%; padding: 1rem;">
+                                Change Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        const user = requireAuth();
+
+        // Populate form
+        document.getElementById('name').value = user.name || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('role').value = user.role === 'staff' ? 'Staff' : 'Student';
+
+        if (user.role === 'student') {
+            document.getElementById('roll_no').value = user.roll_no || '';
+            document.getElementById('semester').value = user.semester || '';
+            document.getElementById('year').value = user.year || '';
+        } else {
+            document.getElementById('student-fields').style.display = 'none';
+        }
+
+        // Profile update
+        document.getElementById('profile-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const saveBtn = document.getElementById('save-btn');
+            setButtonLoading(saveBtn, 'Saving...');
+
+            try {
+                const data = {
+                    email: user.email,
+                    name: document.getElementById('name').value.trim()
+                };
+
+                if (user.role === 'student') {
+                    data.roll_no = document.getElementById('roll_no').value.trim();
+                    data.semester = document.getElementById('semester').value.trim();
+                    data.year = document.getElementById('year').value.trim();
+                }
+
+                const response = await apiPost('/update-profile', data);
+
+                // Update local storage
+                const updatedUser = { ...user, ...data };
+                saveUser(updatedUser);
+
+                document.getElementById('message-container').innerHTML = '<div class="success-message">Profile updated successfully!</div>';
+                setTimeout(() => document.getElementById('message-container').innerHTML = '', 3000);
+            } catch (error) {
+                document.getElementById('message-container').innerHTML = `<div class="error-message">${error.message}</div>`;
+            } finally {
+                resetButton(saveBtn);
+            }
+        });
+
+        // Password change
+        document.getElementById('password-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const changeBtn = document.getElementById('change-password-btn');
+
+            if (newPassword !== confirmPassword) {
+                document.getElementById('password-message').innerHTML = '<div class="error-message">Passwords do not match</div>';
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                document.getElementById('password-message').innerHTML = '<div class="error-message">Password must be at least 6 characters</div>';
+                return;
+            }
+
+            setButtonLoading(changeBtn, 'Changing...');
+
+            try {
+                await apiPost('/change-password', {
+                    email: user.email,
+                    currentPassword,
+                    newPassword
+                });
+
+                document.getElementById('password-message').innerHTML = '<div class="success-message">Password changed successfully!</div>';
+                document.getElementById('password-form').reset();
+                setTimeout(() => document.getElementById('password-message').innerHTML = '', 3000);
+            } catch (error) {
+                document.getElementById('password-message').innerHTML = `<div class="error-message">${error.message}</div>`;
+            } finally {
+                resetButton(changeBtn);
+            }
+        });
+    </script>
+</body>
+
+</html>

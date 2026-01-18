@@ -4,128 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to Instant Library - Choose your role">
     <title>Login - Instant Library</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/app.css">
 </head>
 
 <body>
-
     <div class="page-center">
-        <div class="glass-card" style="max-width: 400px; width: 100%;">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Welcome Back</h1>
-                <p style="color: var(--text-muted);">Please sign in to continue</p>
+        <div class="glass-card" style="max-width: 480px; width: 100%; text-align: center;">
+            <div style="margin-bottom: 2rem;">
+                <h1
+                    style="font-size: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
+                    Welcome Back
+                </h1>
+                <p style="color: var(--text-muted);">Choose your role to continue</p>
             </div>
 
-            <div
-                style="display: flex; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 8px; margin-bottom: 1.5rem;">
-                <button id="btn-student" onclick="setRole('student')"
-                    style="flex: 1; padding: 8px; border-radius: 6px; font-weight: 600; background: white; color: var(--primary); box-shadow: 0 1px 2px rgba(0,0,0,0.1);">Student</button>
-                <button id="btn-staff" onclick="setRole('staff')"
-                    style="flex: 1; padding: 8px; border-radius: 6px; font-weight: 600; background: transparent; color: var(--text-muted);">Staff</button>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem;">
+                <a href="student-login.html" class="btn-primary"
+                    style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.25rem 2rem; font-size: 1.1rem; text-decoration: none;">
+                    <span style="font-size: 1.5rem;">🎓</span>
+                    <span>Student Login</span>
+                </a>
+
+                <a href="staff-login.html" class="btn-secondary"
+                    style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.25rem 2rem; font-size: 1.1rem; text-decoration: none;">
+                    <span style="font-size: 1.5rem;">👤</span>
+                    <span>Staff Login</span>
+                </a>
             </div>
 
-            <form id="loginForm">
-                <div>
-                    <label>Email Address</label>
-                    <input type="email" id="email" required placeholder="name@example.com">
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" id="password" required placeholder="••••••••">
-                </div>
-
-                <div id="error-msg"
-                    style="color: var(--danger); font-size: 0.9rem; margin-bottom: 1rem; display: none;"></div>
-
-                <button type="submit" class="btn-primary" style="width: 100%;">Sign In</button>
-            </form>
-
-            <div style="margin-top: 1.5rem; text-align: center;">
-                <a href="index.html" style="font-size: 0.9rem; color: var(--text-muted);">← Back to Home</a>
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(0,0,0,0.1);">
+                <p style="color: var(--text-muted); font-size: 0.95rem;">
+                    New student? <a href="register.html" style="font-weight: 600;">Register here</a>
+                </p>
+                <p style="margin-top: 1rem;">
+                    <a href="index.html" style="color: var(--text-muted); font-size: 0.9rem;">← Back to Home</a>
+                </p>
             </div>
         </div>
     </div>
-
-    <script>
-        let currentRole = 'student';
-
-        function setRole(role) {
-            currentRole = role;
-            const btnStudent = document.getElementById('btn-student');
-            const btnStaff = document.getElementById('btn-staff');
-
-            if (role === 'student') {
-                btnStudent.style.background = 'white';
-                btnStudent.style.color = 'var(--primary)';
-                btnStudent.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
-
-                btnStaff.style.background = 'transparent';
-                btnStaff.style.color = 'var(--text-muted)';
-                btnStaff.style.boxShadow = 'none';
-            } else {
-                btnStaff.style.background = 'white';
-                btnStaff.style.color = 'var(--primary)';
-                btnStaff.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
-
-                btnStudent.style.background = 'transparent';
-                btnStudent.style.color = 'var(--text-muted)';
-                btnStudent.style.boxShadow = 'none';
-            }
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('error-msg');
-            errorDiv.style.display = 'none';
-
-            try {
-                const response = await fetch('http://localhost:5000/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email.toLowerCase(), password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    if (data.role !== currentRole) {
-                        errorDiv.textContent = `Error: This account is not a ${currentRole} account.`;
-                        errorDiv.style.display = 'block';
-                        return;
-                    }
-
-                    // Save user to localStorage
-                    const userData = {
-                        email: data.email,
-                        name: data.name,
-                        role: data.role,
-                        roll_no: data.roll_no,
-                        semester: data.semester,
-                        year: data.year
-                    };
-                    localStorage.setItem('user', JSON.stringify(userData));
-
-                    // Redirect
-                    if (data.role === 'student') {
-                        window.location.href = 'student_dashboard.html';
-                    } else {
-                        window.location.href = 'staff_dashboard.html';
-                    }
-                } else {
-                    errorDiv.textContent = data.error || 'Login failed';
-                    errorDiv.style.display = 'block';
-                }
-            } catch (err) {
-                errorDiv.textContent = 'Failed to connect to server';
-                errorDiv.style.display = 'block';
-            }
-        });
-    </script>
-
 </body>
 
 </html>

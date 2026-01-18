@@ -1,95 +1,193 @@
+/**
+ * Sidebar Component JavaScript
+ * Handles sidebar rendering and toggle functionality
+ */
 
-// Helper to render Sidebar
-function renderSidebar(activePath) {
-    const user = JSON.parse(localStorage.getItem('user'));
+// Student navigation links
+const studentLinks = [
+    { path: 'dashboard.html', icon: '🏠', label: 'Dashboard' },
+    { path: 'catalog.html', icon: '📖', label: 'Book Catalog' },
+    { path: 'requests.html', icon: '📋', label: 'My Requests' },
+    { path: 'notifications.html', icon: '🔔', label: 'Notifications' },
+    { path: 'profile.html', icon: '👤', label: 'Profile' },
+    { path: 'settings.html', icon: '⚙️', label: 'Settings' },
+    { path: 'about.html', icon: 'ℹ️', label: 'About' },
+];
+
+// Staff navigation links
+const staffLinks = [
+    { path: 'dashboard.html', icon: '🏠', label: 'Dashboard' },
+    { path: 'book-management.html', icon: '📚', label: 'Manage Books' },
+    { path: 'request-management.html', icon: '📋', label: 'Manage Requests' },
+    { path: 'student-management.html', icon: '🎓', label: 'Manage Students' },
+    { path: 'staff-management.html', icon: '👥', label: 'Add Staff' },
+    { path: 'notifications.html', icon: '🔔', label: 'Notifications' },
+    { path: 'profile.html', icon: '👤', label: 'Profile' },
+    { path: 'settings.html', icon: '⚙️', label: 'Settings' },
+    { path: 'about.html', icon: 'ℹ️', label: 'About' },
+];
+
+/**
+ * Initialize sidebar
+ * Call this function on pages that need the sidebar
+ */
+function initSidebar() {
+    const user = getUser();
     if (!user) {
-        window.location.href = 'index.html'; // Role selection
-        return;
+        return; // Don't render sidebar if not logged in
     }
 
-    const isOpen = localStorage.getItem('sidebarOpen') !== 'false'; // Default open
+    const navLinks = user.role === 'staff' ? staffLinks : studentLinks;
+    const currentPage = getCurrentPage();
+    const isOpen = getSidebarState();
 
-    const studentLinks = [
-        { path: 'student_dashboard.html', icon: '🏠', label: 'Dashboard' },
-        { path: 'student_dashboard.html#catalog', icon: '📖', label: 'Book Catalog' }, // Assuming catalog is on dash
-        { path: '#', icon: '📋', label: 'My Requests' },
-        { path: '#', icon: '🔔', label: 'Notifications' },
-        { path: '#', icon: '👤', label: 'Profile' }
-    ];
+    renderSidebar(user, navLinks, currentPage, isOpen);
+    setupSidebarEvents();
+    updateAppContainerClass(isOpen);
+}
 
-    const staffLinks = [
-        { path: 'staff_dashboard.html', icon: '📋', label: 'Manage Requests' },
-        { path: 'manage_books.html', icon: '📚', label: 'Manage Books' },
-        { path: '#', icon: '🎓', label: 'Manage Students' },
-        { path: '#', icon: '🔔', label: 'Notifications' },
-        { path: '#', icon: '👤', label: 'Profile' }
-    ];
-
-    const links = user.role === 'staff' ? staffLinks : studentLinks;
-
-    const html = `
-    <aside class="sidebar ${isOpen ? 'open' : 'closed'}" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-brand">
-                <span class="brand-text">Instant Library</span>
+/**
+ * Render sidebar HTML
+ */
+function renderSidebar(user, navLinks, currentPage, isOpen) {
+    const sidebarHTML = `
+        <aside class="sidebar ${isOpen ? 'open' : 'closed'}" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    ${isOpen ? '<span class="brand-text">Instant Library</span>' : ''}
+                </div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    ${isOpen ? '«' : '☰'}
+                </button>
             </div>
-            <button class="sidebar-toggle" onclick="toggleSidebar()">
-                ${isOpen ? '«' : '☰'}
-            </button>
-        </div>
 
-        <nav class="sidebar-nav">
-            ${links.map(link => `
-                <a href="${link.path}" class="nav-link ${activePath === link.path ? 'active' : ''}">
-                    <span class="nav-icon">${link.icon}</span>
-                    <span class="nav-label">${link.label}</span>
-                </a>
-            `).join('')}
-        </nav>
+            <nav class="sidebar-nav">
+                ${navLinks.map(link => `
+                    <a href="${link.path}" 
+                       class="nav-link ${currentPage === link.path ? 'active' : ''}"
+                       title="${!isOpen ? link.label : ''}">
+                        <span class="nav-icon">${link.icon}</span>
+                        ${isOpen ? `<span class="nav-label">${link.label}</span>` : ''}
+                    </a>
+                `).join('')}
+            </nav>
 
-        <div class="sidebar-footer">
-            <div class="user-info">
-                <div class="user-name">${user.name}</div>
-                <div class="user-role">${user.role === 'staff' ? '👤 Staff' : '🎓 Student'}</div>
+            <div class="sidebar-footer">
+                <div class="user-info" ${!isOpen ? 'style="display:none"' : ''}>
+                    <div class="user-name">${user.name}</div>
+                    <div class="user-role">
+                        ${user.role === 'staff' ? '👤 Staff' : '🎓 Student'}
+                    </div>
+                </div>
+                <button class="logout-btn" id="logout-btn" title="${!isOpen ? 'Logout' : ''}">
+                    <span class="logout-icon">🚪</span>
+                    ${isOpen ? '<span class="logout-text">Logout</span>' : ''}
+                </button>
             </div>
-            <button onclick="logout()" class="logout-btn">
-                <span class="logout-icon">🚪</span>
-                <span class="logout-text">Logout</span>
-            </button>
-        </div>
-    </aside>
+        </aside>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
     `;
 
-    document.getElementById('sidebar-container').innerHTML = html;
+    // Insert at beginning of body
+    document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
+}
 
-    // Adjust main container margin
-    const appContainer = document.querySelector('.app-container');
-    if (appContainer) {
-        appContainer.className = `app-container ${isOpen ? 'sidebar-open' : 'sidebar-closed'}`;
+/**
+ * Setup sidebar event listeners
+ */
+function setupSidebarEvents() {
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    const logoutBtn = document.getElementById('logout-btn');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleSidebar);
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', toggleSidebar);
     }
 }
 
+/**
+ * Toggle sidebar open/closed
+ */
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    const container = document.querySelector('.app-container');
-    const isClosed = sidebar.classList.contains('closed');
+    const overlay = document.getElementById('sidebar-overlay');
+    const isCurrentlyOpen = sidebar.classList.contains('open');
+    const newState = !isCurrentlyOpen;
 
-    if (isClosed) {
-        sidebar.classList.remove('closed');
-        sidebar.classList.add('open');
-        container.classList.remove('sidebar-closed');
-        container.classList.add('sidebar-open');
-        localStorage.setItem('sidebarOpen', 'true');
-    } else {
-        sidebar.classList.remove('open');
-        sidebar.classList.add('closed');
-        container.classList.remove('sidebar-open');
-        container.classList.add('sidebar-closed');
-        localStorage.setItem('sidebarOpen', 'false');
+    // Update sidebar classes
+    sidebar.classList.toggle('open', newState);
+    sidebar.classList.toggle('closed', !newState);
+
+    // Update overlay for mobile
+    if (overlay) {
+        overlay.classList.toggle('visible', newState);
+    }
+
+    // Update toggle button text
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    if (toggleBtn) {
+        toggleBtn.textContent = newState ? '«' : '☰';
+    }
+
+    // Update brand text
+    const brand = sidebar.querySelector('.sidebar-brand');
+    if (brand) {
+        brand.innerHTML = newState ? '<span class="brand-text">Instant Library</span>' : '';
+    }
+
+    // Update nav labels
+    const navLabels = sidebar.querySelectorAll('.nav-label');
+    navLabels.forEach(label => {
+        label.style.display = newState ? '' : 'none';
+    });
+
+    // Update user info
+    const userInfo = sidebar.querySelector('.user-info');
+    if (userInfo) {
+        userInfo.style.display = newState ? '' : 'none';
+    }
+
+    // Update logout text
+    const logoutText = sidebar.querySelector('.logout-text');
+    if (logoutText) {
+        logoutText.style.display = newState ? '' : 'none';
+    }
+
+    // Update nav link titles
+    const navLinks = sidebar.querySelectorAll('.nav-link');
+    const currentLinks = getUser()?.role === 'staff' ? staffLinks : studentLinks;
+    navLinks.forEach((link, index) => {
+        link.title = !newState ? currentLinks[index]?.label || '' : '';
+    });
+
+    // Save state and update container
+    saveSidebarState(newState);
+    updateAppContainerClass(newState);
+}
+
+/**
+ * Update app container class based on sidebar state
+ */
+function updateAppContainerClass(isOpen) {
+    const container = document.querySelector('.app-container');
+    if (container) {
+        container.classList.toggle('sidebar-open', isOpen);
+        container.classList.toggle('sidebar-closed', !isOpen);
     }
 }
 
-function logout() {
-    localStorage.removeItem('user');
-    window.location.href = 'index.html';
-}
+// Auto-initialize sidebar when DOM is ready
+document.addEventListener('DOMContentLoaded', function () {
+    // Only init sidebar if we're on a protected page (has app-container)
+    if (document.querySelector('.app-container')) {
+        initSidebar();
+    }
+});

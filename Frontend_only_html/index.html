@@ -4,49 +4,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Instant Library</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="description"
+        content="Greenfield University Instant Library - A cloud-powered virtual library platform for seamless access to study materials.">
+    <title>Instant Library - Greenfield University</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/landing.css">
 </head>
 
 <body>
-    <div class="page-center">
-        <div class="glass-card" style="max-width: 900px; width: 100%; padding: 3rem; text-align: center;">
-            <div style="margin-bottom: 3rem;">
-                <h1
-                    style="font-size: 3rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">
-                    Welcome Back
-                </h1>
-                <p style="color: var(--text-muted); font-size: 1.2rem;">Please select your role to login</p>
-            </div>
-
-            <div class="features-grid" style="gap: 2rem; margin: 0; max-width: none;">
-                <!-- Student Card -->
-                <div onclick="window.location.href='student_login.html'" class="feature-card"
-                    style="cursor: pointer; transition: transform 0.2s; background: rgba(255,255,255,0.4);">
-                    <div
-                        style="font-size: 3rem; margin-bottom: 1rem; background: #dbeafe; width: 80px; height: 80px; display: flex; align-items: center; justifyContent: center; border-radius: 50%; margin: 0 auto 1rem;">
-                        🎓</div>
-                    <h3>Student</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Access book catalog, request books, and
-                        view your history.</p>
-                    <button class="btn-primary" style="width: 100%;">Student Login</button>
-                </div>
-
-                <!-- Staff Card -->
-                <div onclick="window.location.href='staff_login.html'" class="feature-card"
-                    style="cursor: pointer; transition: transform 0.2s; background: rgba(255,255,255,0.4);">
-                    <div
-                        style="font-size: 3rem; margin-bottom: 1rem; background: #fef3c7; width: 80px; height: 80px; display: flex; align-items: center; justifyContent: center; border-radius: 50%; margin: 0 auto 1rem;">
-                        👨‍💼</div>
-                    <h3>Staff</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Manage inventory, process requests, and
-                        track circulation.</p>
-                    <button class="btn-primary"
-                        style="width: 100%; background: linear-gradient(135deg, var(--secondary), #b45309);">Staff
-                        Login</button>
+    <div class="landing-container">
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Greenfield University<br>Instant Library</h1>
+                <p class="hero-subtitle">
+                    Experience the next generation of library management.
+                    A cloud-powered virtual library providing seamless access to study materials for all students.
+                </p>
+                <div class="cta-buttons">
+                    <a href="register.html" class="btn-primary">Get Started</a>
+                    <a href="login.html" class="btn-secondary">Login</a>
                 </div>
             </div>
-        </div>
+        </header>
+
+        <!-- Problem & Solution Section -->
+        <section class="section">
+            <h2 class="section-title">Reimagining Library Access</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">⚠️</span>
+                    <h3 class="feature-title">The Problem</h3>
+                    <p>
+                        The BSC Computer Science department faces a shortage of physical textbooks due to a growing
+                        student population.
+                        Limited library resources lead to long wait times and challenges in accessing essential study
+                        materials.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🚀</span>
+                    <h3 class="feature-title">Our Solution</h3>
+                    <p>
+                        The Instant Library brings the catalog to your fingertips.
+                        Register, log in, and request books online with real-time notifications ensuring effective
+                        communication
+                        between students and library staff.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="section" style="background: rgba(249, 250, 251, 0.5); border-radius: 30px; margin: 2rem auto;">
+            <h2 class="section-title">Why Choose Instant Library?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">Real-Time Updates</h3>
+                    <p>Check book availability instantly. No more guessing or wasted trips to the library.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔔</span>
+                    <h3 class="feature-title">Smart Notifications</h3>
+                    <p>Get alerted via email when your requested book is ready for pickup or when requests are
+                        processed.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3 class="feature-title">Accessible Anywhere</h3>
+                    <p>Browse the catalog from your dorm, classroom, or on the go. Available 24/7.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cloud Architecture Section -->
+        <section class="section cloud-section">
+            <h2 class="section-title">Powered by AWS Cloud</h2>
+            <p class="section-subtitle">Scalable, Secure, and Reliable Infrastructure</p>
+
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">💻</div>
+                    <h3>Amazon EC2</h3>
+                    <p>High-performance computing ensuring 24/7 availability. Handles multiple students accessing the
+                        platform simultaneously with rapid response times.</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🗄️</div>
+                    <h3>Amazon DynamoDB</h3>
+                    <p>NoSQL database service providing single-digit millisecond latency. Stores all user data and book
+                        requests efficiently at any scale.</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📨</div>
+                    <h3>Amazon SNS</h3>
+                    <p>Simple Notification Service delivering immediate email alerts to students when books are
+                        available and to staff when new requests arrive.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">1️⃣</span>
+                    <h3 class="feature-title">Register & Login</h3>
+                    <p>Create your student account with email verification. Staff accounts are created by existing staff
+                        members.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">2️⃣</span>
+                    <h3 class="feature-title">Browse & Request</h3>
+                    <p>Search the book catalog, check availability, and submit requests for books you need.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">3️⃣</span>
+                    <h3 class="feature-title">Get Notified</h3>
+                    <p>Receive instant notifications when your request is approved and the book is ready for pickup.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <p>&copy; 2026 Greenfield University Instant Library. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="support.html">Contact Support</a>
+            </div>
+        </footer>
     </div>
 </body>
 

@@ -198,3 +198,65 @@ TO:    student1@gmail.com
 SUBJ:  Request Update: Introduction to Algorithms
 BODY:  Your request for 'Introduction to Algorithms' has been updated to: COMPLETED.
 ============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T21:24:57.953595
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Received: Flask Web Development
+BODY:  Dear Student Member,
+
+Your request for 'Flask Web Development' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T21:24:57.954593
+TOPIC: StaffNotification
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Flask Web Development
+BODY:  Student Student Member has requested 'Flask Web Development'.
+Role No: S101
+Status: Pending
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T21:26:17.997227
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Received: Python Data Science Handbook
+BODY:  Dear Student Member,
+
+Your request for 'Python Data Science Handbook' has been received and is currently Pending.
+
+Thank you,
+Greenfield Library
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T21:26:18.000247
+TOPIC: StaffNotification
+TO:    staff@gmail.com
+SUBJ:  New Book Request: Python Data Science Handbook
+BODY:  Student Student Member has requested 'Python Data Science Handbook'.
+Role No: S101
+Status: Pending
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T21:32:18.494593
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Update: Flask Web Development
+BODY:  Your request for 'Flask Web Development' has been updated to: REJECTED.
+============================================================
+
+============================================================
+[SNS SIMULATION] - 2026-01-18T21:32:23.556005
+TOPIC: StudentNotification
+TO:    student@gmail.com
+SUBJ:  Request Update: Python Data Science Handbook
+BODY:  Your request for 'Python Data Science Handbook' has been updated to: APPROVED.
+============================================================

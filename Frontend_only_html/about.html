@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About - Instant Library">
+    <title>About - Instant Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/header-footer.css">
+</head>
+
+<body>
+    <div class="app-container sidebar-open">
+        <main>
+            <div style="padding: 2rem; max-width: 900px; margin: 0 auto;">
+                <div class="glass-card" style="margin-bottom: 2rem; text-align: center;">
+                    <h1
+                        style="font-size: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
+                        ℹ️ About Instant Library
+                    </h1>
+                    <p style="color: var(--text-muted); font-size: 1.1rem;">Greenfield University's Cloud-Powered
+                        Library System</p>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary);">Overview</h2>
+                    <p style="line-height: 1.8; color: var(--text-main);">
+                        The Instant Library is a virtual library platform developed by Greenfield University's Cloud
+                        Solutions Department.
+                        It addresses the shortage of physical textbooks faced by the BSC Computer Science department due
+                        to a growing student population.
+                    </p>
+                    <p style="line-height: 1.8; color: var(--text-main); margin-top: 1rem;">
+                        Using Flask for backend development, AWS EC2 for hosting, and DynamoDB for managing data, the
+                        system allows students to register,
+                        log in, and request books online. AWS SNS sends real-time notifications to students and library
+                        staff about requests,
+                        ensuring effective communication and resource management.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--primary);">Key Features</h2>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div style="padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📚</div>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Book Catalog</h3>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Browse and search the complete
+                                library collection</p>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Request System</h3>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Submit and track book requests
+                                online</p>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔔</div>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Real-time Notifications</h3>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Get instant updates via email and
+                                in-app</p>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">☁️</div>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Cloud Powered</h3>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Scalable AWS infrastructure for
+                                reliability</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--primary);">Technology Stack</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💻</div>
+                            <h4>Amazon EC2</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Compute hosting</p>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🗄️</div>
+                            <h4>DynamoDB</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">NoSQL database</p>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📨</div>
+                            <h4>Amazon SNS</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Notifications</p>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🐍</div>
+                            <h4>Flask</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Backend API</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        requireAuth();
+    </script>
+</body>
+
+</html>
