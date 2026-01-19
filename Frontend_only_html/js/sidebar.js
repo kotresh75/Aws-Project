@@ -5,17 +5,18 @@
 
 // Student navigation links
 const studentLinks = [
+    { path: 'about.html', icon: 'ℹ️', label: 'About' },
     { path: 'dashboard.html', icon: '🏠', label: 'Dashboard' },
     { path: 'catalog.html', icon: '📖', label: 'Book Catalog' },
     { path: 'requests.html', icon: '📋', label: 'My Requests' },
     { path: 'notifications.html', icon: '🔔', label: 'Notifications' },
     { path: 'profile.html', icon: '👤', label: 'Profile' },
     { path: 'settings.html', icon: '⚙️', label: 'Settings' },
-    { path: 'about.html', icon: 'ℹ️', label: 'About' },
 ];
 
 // Staff navigation links
 const staffLinks = [
+    { path: 'about.html', icon: 'ℹ️', label: 'About' },
     { path: 'dashboard.html', icon: '🏠', label: 'Dashboard' },
     { path: 'book-management.html', icon: '📚', label: 'Manage Books' },
     { path: 'request-management.html', icon: '📋', label: 'Manage Requests' },
@@ -24,7 +25,6 @@ const staffLinks = [
     { path: 'notifications.html', icon: '🔔', label: 'Notifications' },
     { path: 'profile.html', icon: '👤', label: 'Profile' },
     { path: 'settings.html', icon: '⚙️', label: 'Settings' },
-    { path: 'about.html', icon: 'ℹ️', label: 'About' },
 ];
 
 /**

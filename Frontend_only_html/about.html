@@ -28,18 +28,62 @@
                 <div class="glass-card" style="margin-bottom: 2rem;">
                     <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary);">Overview</h2>
                     <p style="line-height: 1.8; color: var(--text-main);">
-                        The Instant Library is a virtual library platform developed by Greenfield University's Cloud
-                        Solutions Department.
-                        It addresses the shortage of physical textbooks faced by the BSC Computer Science department due
-                        to a growing student population.
+                        At Greenfield University, the BSC Computer Science department faces a shortage of physical
+                        textbooks due to a growing student population. The limited availability of library resources has
+                        led to long wait times and challenges in accessing essential study materials.
                     </p>
                     <p style="line-height: 1.8; color: var(--text-main); margin-top: 1rem;">
-                        Using Flask for backend development, AWS EC2 for hosting, and DynamoDB for managing data, the
-                        system allows students to register,
-                        log in, and request books online. AWS SNS sends real-time notifications to students and library
-                        staff about requests,
-                        ensuring effective communication and resource management.
+                        To solve this, the university’s Cloud Solutions Department developed the Instant Library—a
+                        virtual library platform. Using Flask for backend development, AWS EC2 for hosting, and DynamoDB
+                        for managing data, the system allows students to register, log in, and request books online. AWS
+                        SNS sends real-time notifications to students and library staff about requests, ensuring
+                        effective communication and resource management. This cloud-based solution enhances the
+                        availability of study materials, providing seamless access for all students.
                     </p>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--primary);">Usage Scenarios</h2>
+
+                    <div style="margin-bottom: 1.5rem; padding-left: 1rem; border-left: 4px solid var(--primary);">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark);">Scenario 1:
+                            Efficient Book Request System for Students</h3>
+                        <p style="line-height: 1.6; color: var(--text-main);">
+                            In the Instant Library System at Greenfield University, AWS EC2 ensures a reliable
+                            infrastructure to manage multiple students accessing the platform simultaneously. For
+                            example, a student can log in, navigate to the book request page, and easily submit a
+                            request for unavailable textbooks. Flask handles backend operations, efficiently retrieving
+                            and processing user data in real-time. The cloud-based architecture allows the platform to
+                            handle a high volume of book requests during peak periods, ensuring smooth operation without
+                            delays.
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem; padding-left: 1rem; border-left: 4px solid var(--success);">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark);">Scenario 2:
+                            Seamless Book Request Notifications for Library Staff</h3>
+                        <p style="line-height: 1.6; color: var(--text-main);">
+                            When students request books that are unavailable in the physical library, the Instant
+                            Library System uses AWS SNS to notify both the students and the library staff. For instance,
+                            a student requests a textbook, and Flask processes the request while SNS sends an email to
+                            both the student (confirming the request) and the library staff (informing them of the new
+                            request). The secure integration with AWS DynamoDB stores all book requests, ensuring they
+                            are tracked and resolved efficiently.
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem; padding-left: 1rem; border-left: 4px solid var(--secondary);">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark);">Scenario 3: Easy
+                            Access to Library Resources</h3>
+                        <p style="line-height: 1.6; color: var(--text-main);">
+                            The Instant Library System provides students with easy access to available resources in the
+                            library. For example, a student logs in and views the list of available books and materials
+                            on the platform. They can quickly check the availability status or place a request if the
+                            book is not in stock. Flask manages real-time data fetching from DynamoDB, while EC2 hosting
+                            ensures the platform performs seamlessly even when multiple students access it at the same
+                            time, offering a smooth and uninterrupted user experience.
+                        </p>
+                    </div>
                 </div>
 
                 <div class="glass-card" style="margin-bottom: 2rem;">

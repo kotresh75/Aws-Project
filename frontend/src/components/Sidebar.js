@@ -21,16 +21,17 @@ function Sidebar({ isOpen, toggleSidebar }) {
     };
 
     const studentLinks = [
+        { path: '/about', icon: 'ℹ️', label: 'About' },
         { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
         { path: '/catalog', icon: '📖', label: 'Book Catalog' },
         { path: '/requests', icon: '📋', label: 'My Requests' },
         { path: '/notifications', icon: '🔔', label: 'Notifications' },
         { path: '/profile', icon: '👤', label: 'Profile' },
         { path: '/settings', icon: '⚙️', label: 'Settings' },
-        { path: '/about', icon: 'ℹ️', label: 'About' },
     ];
 
     const staffLinks = [
+        { path: '/about', icon: 'ℹ️', label: 'About' },
         { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
         { path: '/book-management', icon: '📚', label: 'Manage Books' },
         { path: '/request-management', icon: '📋', label: 'Manage Requests' },
@@ -39,7 +40,6 @@ function Sidebar({ isOpen, toggleSidebar }) {
         { path: '/notifications', icon: '🔔', label: 'Notifications' },
         { path: '/profile', icon: '👤', label: 'Profile' },
         { path: '/settings', icon: '⚙️', label: 'Settings' },
-        { path: '/about', icon: 'ℹ️', label: 'About' },
     ];
 
     const navLinks = user.role === 'staff' ? staffLinks : studentLinks;

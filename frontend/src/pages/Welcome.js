@@ -34,16 +34,17 @@ function Welcome() {
                         <span className="feature-icon">⚠️</span>
                         <h3 className="feature-title">The Problem</h3>
                         <p>
-                            Traditional libraries struggle with manual tracking, slow searches, and limited accessibility.
-                            Students waste time finding books, and staff drown in paperwork.
+                            At Greenfield University, the BSC Computer Science department faces a shortage of physical textbooks due to a growing student population.
+                            The limited availability of library resources has led to long wait times and challenges in accessing essential study materials.
                         </p>
                     </div>
                     <div className="feature-card">
                         <span className="feature-icon">🚀</span>
                         <h3 className="feature-title">Our Solution</h3>
                         <p>
-                            Instant Library brings the catalog to your fingertips.
-                            Real-time availability, instant requests, and smart notifications—all powered by the cloud.
+                            To solve this, the university’s Cloud Solutions Department developed the Instant Library—a virtual library platform.
+                            Using Flask, AWS EC2, and DynamoDB, the system allows students to register, log in, and request books online.
+                            AWS SNS sends real-time notifications, ensuring effective communication and request management.
                         </p>
                     </div>
                 </div>
