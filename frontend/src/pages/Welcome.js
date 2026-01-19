@@ -7,20 +7,39 @@ function Welcome() {
 
     return (
         <div className="landing-container">
+            {/* Navigation Bar */}
+            <nav className="landing-nav">
+                <div className="nav-content">
+                    <div className="nav-logo">
+                        <span className="logo-icon">📚</span>
+                        <span className="logo-text">Instant Library</span>
+                    </div>
+                    <div className="nav-links">
+                        <Link to="/about" className="nav-link">About</Link>
+                        <Link to="/login" className="nav-link">Login</Link>
+                        <Link to="/register" className="btn-primary small">Get Started</Link>
+                    </div>
+                </div>
+            </nav>
+
             {/* Hero Section */}
             <header className="hero-section">
                 <div className="hero-content">
-                    <h1 className="hero-title">Instant Library System</h1>
+                    <div className="hero-badge">New: Cloud Powered ☁️</div>
+                    <h1 className="hero-title">
+                        The Future of <br />
+                        <span className="gradient-text">Library Management</span>
+                    </h1>
                     <p className="hero-subtitle">
-                        Experience the next generation of library management.
-                        Lightning-fast, cloud-powered, and designed for modern education.
+                        Experience the next generation of library systems.
+                        Lightning-fast downloads, real-time tracking, and generic modern education support.
                     </p>
                     <div className="cta-buttons">
                         <button onClick={() => navigate('/register')} className="btn-primary">
-                            Get Started
+                            Create Account
                         </button>
-                        <button onClick={() => navigate('/login')} className="btn-secondary">
-                            Login
+                        <button onClick={() => navigate('/about')} className="btn-secondary">
+                            Learn More
                         </button>
                     </div>
                 </div>

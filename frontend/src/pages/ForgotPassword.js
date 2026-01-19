@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import '../styles/LandingPage.css';
 
 function ForgotPassword() {
     const [step, setStep] = useState(1); // step 1: email, step 2: verify OTP, step 3: reset password
@@ -129,92 +130,117 @@ function ForgotPassword() {
     };
 
     return (
-        <div className="forgot-password-container">
-            <div className="forgot-password-box">
-                <h1>Instant Library</h1>
-                <h2>Reset Password</h2>
+        <div className="landing-container">
+            {/* Standard Navigation */}
+            <nav className="landing-nav">
+                <div className="nav-content">
+                    <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+                        <span className="logo-icon">📚</span>
+                        <span className="logo-text">Instant Library</span>
+                    </div>
+                    <div className="nav-links">
+                        <Link to="/" className="nav-link">Home</Link>
+                        <Link to="/about" className="nav-link">About</Link>
+                        <Link to="/login" className="nav-link">Login</Link>
+                    </div>
+                </div>
+            </nav>
 
-                {step === 1 && (
-                    <form onSubmit={handleEmailSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="email">Enter your email address</label>
-                            <input
-                                id="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                disabled={loading}
-                            />
-                        </div>
-                        {error && <div className="error-message">{error}</div>}
-                        {success && <div className="success-message">{success}</div>}
-                        <button type="submit" disabled={loading}>
-                            {loading ? 'Sending OTP...' : 'Send OTP'}
-                        </button>
-                    </form>
-                )}
+            <div className="auth-wrapper">
+                <div className="glass-card" style={{ maxWidth: '420px', width: '100%', padding: '2.5rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <h1 className="hero-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                            Reset <span className="gradient-text">Password</span>
+                        </h1>
+                        <p style={{ color: 'var(--text-muted)' }}>Securely recover your account</p>
+                    </div>
 
-                {step === 2 && (
-                    <form onSubmit={handleVerifyOTP}>
-                        <p style={{ marginBottom: '1rem', color: '#666' }}>
-                            OTP has been sent to your terminal. Please enter it below.
-                        </p>
-                        <div className="form-group">
-                            <label htmlFor="otp">Enter OTP (6 digits)</label>
-                            <input
-                                id="otp"
-                                type="text"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
-                                placeholder="000000"
-                                maxLength="6"
-                                required
-                                disabled={loading}
-                            />
-                        </div>
-                        {error && <div className="error-message">{error}</div>}
-                        {success && <div className="success-message">{success}</div>}
-                        <button type="submit" disabled={loading}>
-                            {loading ? 'Verifying...' : 'Verify OTP'}
-                        </button>
-                    </form>
-                )}
+                    {step === 1 && (
+                        <form onSubmit={handleEmailSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="email">Enter your email address</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                    placeholder="your@email.com"
+                                />
+                            </div>
+                            {error && <div className="error-message">{error}</div>}
+                            {success && <div className="success-message">{success}</div>}
+                            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
+                                {loading ? 'Sending OTP...' : 'Send OTP'}
+                            </button>
+                        </form>
+                    )}
 
-                {step === 3 && (
-                    <form onSubmit={handlePasswordReset}>
-                        <div className="form-group">
-                            <label htmlFor="newPassword">New Password</label>
-                            <input
-                                id="newPassword"
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                required
-                                disabled={loading}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="confirmPassword">Confirm Password</label>
-                            <input
-                                id="confirmPassword"
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                                disabled={loading}
-                            />
-                        </div>
-                        {error && <div className="error-message">{error}</div>}
-                        {success && <div className="success-message">{success}</div>}
-                        <button type="submit" disabled={loading}>
-                            {loading ? 'Resetting...' : 'Reset Password'}
-                        </button>
-                    </form>
-                )}
+                    {step === 2 && (
+                        <form onSubmit={handleVerifyOTP}>
+                            <p style={{ marginBottom: '1.5rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                                OTP has been sent to your email/terminal.
+                            </p>
+                            <div className="form-group">
+                                <label htmlFor="otp">Enter OTP (6 digits)</label>
+                                <input
+                                    id="otp"
+                                    type="text"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value)}
+                                    placeholder="0 0 0 0 0 0"
+                                    maxLength="6"
+                                    required
+                                    disabled={loading}
+                                    style={{ textAlign: 'center', fontSize: '1.5rem', letterSpacing: '0.5rem' }}
+                                />
+                            </div>
+                            {error && <div className="error-message">{error}</div>}
+                            {success && <div className="success-message">{success}</div>}
+                            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
+                                {loading ? 'Verifying...' : 'Verify OTP'}
+                            </button>
+                        </form>
+                    )}
 
-                <div className="link-container">
-                    <p><a href="/login">Back to Login</a></p>
+                    {step === 3 && (
+                        <form onSubmit={handlePasswordReset}>
+                            <div className="form-group">
+                                <label htmlFor="newPassword">New Password</label>
+                                <input
+                                    id="newPassword"
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="confirmPassword">Confirm Password</label>
+                                <input
+                                    id="confirmPassword"
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            {error && <div className="error-message">{error}</div>}
+                            {success && <div className="success-message">{success}</div>}
+                            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
+                                {loading ? 'Resetting...' : 'Reset Password'}
+                            </button>
+                        </form>
+                    )}
+
+                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(0,0,0,0.1)', textAlign: 'center' }}>
+                        <p><Link to="/login" style={{ color: 'var(--text-muted)' }}>← Back to Login</Link></p>
+                    </div>
                 </div>
             </div>
         </div>

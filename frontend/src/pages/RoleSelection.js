@@ -1,89 +1,95 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/LandingPage.css'; // Global styles cover this now, but kept for legacy checks
+import { Link, useNavigate } from 'react-router-dom';
+import '../styles/LandingPage.css'; // Ensure Landing Page styles are available
 
 function RoleSelection() {
     const navigate = useNavigate();
 
     return (
-        <div className="page-center">
-            <div className="glass-card" style={{ maxWidth: '900px', width: '100%', padding: '3rem', textAlign: 'center' }}>
-                <div style={{ marginBottom: '3rem' }}>
-                    <h1 style={{
-                        fontSize: '3rem',
-                        background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        marginBottom: '1rem'
-                    }}>Welcome Back</h1>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>Please select your role to login</p>
-                </div>
-
-                <div className="features-grid" style={{ gap: '2rem' }}>
-                    {/* Student Card */}
-                    <div
-                        onClick={() => navigate('/student-login')}
-                        style={{
-                            cursor: 'pointer',
-                            padding: '2rem',
-                            background: 'rgba(255,255,255,0.4)',
-                            border: '1px solid rgba(255,255,255,0.5)',
-                            borderRadius: '16px',
-                            transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-5px)';
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
-                            e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'none';
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.4)';
-                            e.currentTarget.style.boxShadow = 'none';
-                        }}
-                    >
-                        <div style={{ fontSize: '3rem', marginBottom: '1rem', background: '#dbeafe', width: '80px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', margin: '0 auto 1rem' }}>🎓</div>
-                        <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Student</h3>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Access book catalog, request books, and view your history.</p>
-                        <button className="btn-primary" style={{ width: '100%' }}>Student Login</button>
+        <div className="landing-container">
+            {/* Same Navigation as Landing Page */}
+            <nav className="landing-nav">
+                <div className="nav-content">
+                    <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+                        <span className="logo-icon">📚</span>
+                        <span className="logo-text">Instant Library</span>
                     </div>
-
-                    {/* Staff Card */}
-                    <div
-                        onClick={() => navigate('/staff-login')}
-                        style={{
-                            cursor: 'pointer',
-                            padding: '2rem',
-                            background: 'rgba(255,255,255,0.4)',
-                            border: '1px solid rgba(255,255,255,0.5)',
-                            borderRadius: '16px',
-                            transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-5px)';
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
-                            e.currentTarget.style.boxShadow = '0 10px 25px rgba(217, 119, 6, 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'none';
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.4)';
-                            e.currentTarget.style.boxShadow = 'none';
-                        }}
-                    >
-                        <div style={{ fontSize: '3rem', marginBottom: '1rem', background: '#fef3c7', width: '80px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', margin: '0 auto 1rem' }}>👨‍💼</div>
-                        <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Staff</h3>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Manage inventory, process requests, and track circulation.</p>
-                        <button className="btn-primary" style={{ width: '100%', background: 'linear-gradient(135deg, var(--secondary), #b45309)' }}>Staff Login</button>
+                    <div className="nav-links">
+                        <Link to="/" className="nav-link">Home</Link>
+                        <Link to="/about" className="nav-link">About</Link>
+                        <Link to="/register" className="btn-primary small">Get Started</Link>
                     </div>
                 </div>
+            </nav>
 
-                <div style={{ marginTop: '3rem' }}>
-                    <button
-                        onClick={() => navigate('/')}
-                        style={{ background: 'none', border: 'none', color: 'var(--text-muted)', textDecoration: 'underline', cursor: 'pointer', fontSize: '1rem' }}
-                    >
-                        ← Back to Home
-                    </button>
+            {/* Main Content Area - Centered like a Hero but for Selection */}
+            <div className="page-center" style={{ minHeight: 'calc(100vh - 80px)', paddingTop: '80px' }}>
+                <div style={{ width: '100%', maxWidth: '1000px', padding: '2rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+                        <div className="hero-badge">Welcome Back</div>
+                        <h1 className="hero-title" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>
+                            Choose Your <span className="gradient-text">Portal</span>
+                        </h1>
+                        <p className="hero-subtitle" style={{ marginBottom: '0' }}>
+                            Select your role to access the library dashboard.
+                        </p>
+                    </div>
+
+                    <div className="features-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                        {/* Student Card */}
+                        <div
+                            className="glass-card role-card"
+                            onClick={() => navigate('/student-login')}
+                            style={{
+                                cursor: 'pointer',
+                                padding: '3rem 2rem',
+                                textAlign: 'center',
+                                transition: 'all 0.3s ease',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <div style={{
+                                width: '80px', height: '80px', background: 'rgba(79, 70, 229, 0.1)',
+                                borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: '2.5rem', margin: '0 auto 1.5rem'
+                            }}>
+                                🎓
+                            </div>
+                            <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-main)' }}>Student</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
+                                Access book catalog, request resources, and manage your study materials.
+                            </p>
+                            <button className="btn-primary" style={{ width: '100%' }}>Student Login</button>
+                        </div>
+
+                        {/* Staff Card */}
+                        <div
+                            className="glass-card role-card"
+                            onClick={() => navigate('/staff-login')}
+                            style={{
+                                cursor: 'pointer',
+                                padding: '3rem 2rem',
+                                textAlign: 'center',
+                                transition: 'all 0.3s ease',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <div style={{
+                                width: '80px', height: '80px', background: 'rgba(16, 185, 129, 0.1)',
+                                borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: '2.5rem', margin: '0 auto 1.5rem'
+                            }}>
+                                👨‍💼
+                            </div>
+                            <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-main)' }}>Staff</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
+                                Manage inventory, process student requests, and track library assets.
+                            </p>
+                            <button className="btn-secondary" style={{ width: '100%', borderColor: 'var(--text-muted)' }}>Staff Login</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

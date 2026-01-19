@@ -32,6 +32,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/" element={<Welcome />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/login" element={<RoleSelection />} />
                 <Route path="/student-login" element={<StudentLogin />} />
                 <Route path="/staff-login" element={<StaffLogin />} />
@@ -60,7 +61,6 @@ function App() {
                     <Route path="/book-management" element={<BookManagement />} />
                     <Route path="/request-management" element={<RequestManagement />} />
                     <Route path="/student-management" element={<StudentManagement />} />
-                    <Route path="/about" element={<About />} />
                 </Route>
 
                 {/* 404 Catch-all - MUST be last */}

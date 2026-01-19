@@ -8,94 +8,120 @@
     <title>Register - Instant Library</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/landing.css?v=2">
 </head>
 
 <body>
-    <div class="page-center">
-        <div class="glass-card" style="max-width: 500px; width: 100%;">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <h1
-                    style="font-size: 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
-                    Student Registration
-                </h1>
-                <p style="color: var(--text-muted);">Create your Instant Library account</p>
+    <div class="landing-container">
+        <!-- Navigation Bar -->
+        <nav class="landing-nav">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <span class="logo-icon">📚</span>
+                    <span class="logo-text">Instant Library</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="login.html" class="nav-link">Login</a>
+                </div>
             </div>
+        </nav>
 
-            <!-- Step 1: Registration Form -->
-            <form id="register-form">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Minimum 6 characters"
-                        minlength="6">
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required
-                        placeholder="Re-enter password">
+        <div class="auth-wrapper">
+            <div class="glass-card" style="max-width: 600px; width: 100%; padding: 3rem;">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        Student <span class="gradient-text">Registration</span>
+                    </h1>
+                    <p style="color: var(--text-muted);">Create your Instant Library account</p>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label for="roll_no">Roll Number</label>
-                        <input type="text" id="roll_no" name="roll_no" placeholder="e.g., S101">
+                <!-- Step 1: Registration Form -->
+                <form id="register-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="student@edu.com">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="semester">Semester</label>
-                        <input type="text" id="semester" name="semester" placeholder="e.g., 3">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="roll_no">Roll No</label>
+                            <input type="text" id="roll_no" name="roll_no" required placeholder="S101">
+                        </div>
+                        <div class="form-group">
+                            <label for="semester">Semester</label>
+                            <input type="text" id="semester" name="semester" required placeholder="3">
+                        </div>
+                        <div class="form-group">
+                            <label for="year">Year</label>
+                            <input type="text" id="year" name="year" required placeholder="2">
+                        </div>
                     </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required placeholder="Min 6 chars"
+                                minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required
+                                placeholder="Re-enter">
+                        </div>
+                    </div>
+
+                    <div id="error-container" style="display: none;" class="error-message"></div>
+                    <div id="success-container" style="display: none;" class="success-message"></div>
+
+                    <button type="submit" id="submit-btn" class="btn-primary"
+                        style="width: 100%; margin-top: 2rem; padding: 1rem;">
+                        Register
+                    </button>
+                </form>
+
+                <!-- Step 2: OTP Verification (hidden initially) -->
+                <form id="otp-form" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📧</div>
+                        <h3 style="margin-bottom: 0.5rem; color: var(--text-main);">Verify Email</h3>
+                        <p style="color: var(--text-muted);">Enter the 6-digit OTP sent to your email</p>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">(Check terminal for
+                            dev)</p>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="otp" name="otp" required placeholder="0 0 0 0 0 0" maxlength="6"
+                            style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;">
+                    </div>
+
+                    <div id="otp-error-container" style="display: none;" class="error-message"></div>
+                    <div id="otp-success-container" style="display: none;" class="success-message"></div>
+
+                    <button type="submit" id="verify-btn" class="btn-primary"
+                        style="width: 100%; margin-top: 2rem; padding: 1rem;">
+                        Verify OTP
+                    </button>
+                    <button type="button" onclick="location.reload()" class="btn-secondary"
+                        style="width: 100%; margin-top: 1rem; border: none; background: transparent;">
+                        Back to Registration
+                    </button>
+                </form>
+
+                <div
+                    style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1); text-align: center;">
+                    <p style="color: var(--text-muted);">
+                        Already have an account? <a href="student-login.html"
+                            style="font-weight: 600; color: var(--primary);">Login here</a>
+                    </p>
                 </div>
-                <div class="form-group">
-                    <label for="year">Year</label>
-                    <input type="text" id="year" name="year" placeholder="e.g., 2">
-                </div>
-
-                <div id="error-container" style="display: none;"></div>
-                <div id="success-container" style="display: none;"></div>
-
-                <button type="submit" id="submit-btn" class="btn-primary"
-                    style="width: 100%; margin-top: 1rem; padding: 1rem;">
-                    Register
-                </button>
-            </form>
-
-            <!-- Step 2: OTP Verification (hidden initially) -->
-            <form id="otp-form" style="display: none;">
-                <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <p style="color: var(--text-muted);">Enter the 6-digit OTP sent to your email</p>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">(Check the terminal for
-                        OTP in development)</p>
-                </div>
-                <div class="form-group">
-                    <label for="otp">OTP Code</label>
-                    <input type="text" id="otp" name="otp" required placeholder="Enter 6-digit OTP" maxlength="6"
-                        style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;">
-                </div>
-
-                <div id="otp-error-container" style="display: none;"></div>
-                <div id="otp-success-container" style="display: none;"></div>
-
-                <button type="submit" id="verify-btn" class="btn-primary"
-                    style="width: 100%; margin-top: 1rem; padding: 1rem;">
-                    Verify OTP
-                </button>
-            </form>
-
-            <div
-                style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1); text-align: center;">
-                <p style="color: var(--text-muted); font-size: 0.9rem;">
-                    Already have an account? <a href="student-login.html" style="font-weight: 600;">Login here</a>
-                </p>
-                <p style="margin-top: 0.5rem;">
-                    <a href="index.html" style="color: var(--text-muted); font-size: 0.9rem;">← Back to Home</a>
-                </p>
             </div>
         </div>
     </div>

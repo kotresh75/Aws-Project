@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import '../styles/LandingPage.css';
 
 function StudentLogin() {
     const [email, setEmail] = useState('');
@@ -47,69 +48,78 @@ function StudentLogin() {
     };
 
     return (
-        <div className="page-center">
-            <div className="glass-card" style={{ maxWidth: '420px', width: '100%' }}>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h1 style={{
-                        fontSize: '2rem',
-                        background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        marginBottom: '0.5rem'
-                    }}>Student Login</h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Welcome back to Instant Library</p>
+        <div className="landing-container">
+            {/* Standard Navigation */}
+            <nav className="landing-nav">
+                <div className="nav-content">
+                    <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+                        <span className="logo-icon">📚</span>
+                        <span className="logo-text">Instant Library</span>
+                    </div>
+                    <div className="nav-links">
+                        <Link to="/" className="nav-link">Home</Link>
+                        <Link to="/about" className="nav-link">About</Link>
+                        <Link to="/register" className="btn-primary small">Get Started</Link>
+                    </div>
                 </div>
+            </nav>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="email">Email Address</label>
-                        <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            disabled={loading}
-                            placeholder="Enter your email"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            disabled={loading}
-                            placeholder="••••••••"
-                        />
+            <div className="auth-wrapper">
+                <div className="glass-card" style={{ maxWidth: '420px', width: '100%' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <h1 className="hero-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                            Student <span className="gradient-text">Login</span>
+                        </h1>
+                        <p style={{ color: 'var(--text-muted)' }}>Welcome back to Instant Library</p>
                     </div>
 
-                    {error && <div className="error-message">{error}</div>}
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="email">Email Address</label>
+                            <input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                disabled={loading}
+                                placeholder="Enter your email"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                disabled={loading}
+                                placeholder="••••••••"
+                            />
+                        </div>
 
-                    <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '1rem', padding: '1rem' }}>
-                        {loading ? 'Logging in...' : 'Sign In'}
-                    </button>
+                        {error && <div className="error-message">{error}</div>}
 
-                    <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-                        <button
-                            type="button"
-                            onClick={() => navigate('/login')}
-                            style={{ background: 'none', color: 'var(--text-muted)', textDecoration: 'underline' }}
-                        >
-                            ← Back to Role Selection
+                        <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '1rem', padding: '1rem' }}>
+                            {loading ? 'Logging in...' : 'Sign In'}
                         </button>
-                    </div>
-                </form>
 
-                <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(0,0,0,0.1)', textAlign: 'center' }}>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                        Don't have an account? <a href="/register" style={{ fontWeight: 600 }}>Register here</a>
-                    </p>
-                    <p style={{ marginTop: '0.5rem' }}>
-                        <a href="/forgot-password" style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Forgot password?</a>
-                    </p>
+                        <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                            <Link to="/login" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>
+                                ← Back to Role Selection
+                            </Link>
+                        </div>
+                    </form>
+
+                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(0,0,0,0.1)', textAlign: 'center' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            Don't have an account? <Link to="/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>Register here</Link>
+                        </p>
+                        <p style={{ marginTop: '0.5rem' }}>
+                            <Link to="/forgot-password" style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Forgot password?</Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

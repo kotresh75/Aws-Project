@@ -8,52 +8,70 @@
     <title>Student Login - Instant Library</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/landing.css?v=2">
 </head>
 
 <body>
-    <div class="page-center">
-        <div class="glass-card" style="max-width: 420px; width: 100%;">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <h1
-                    style="font-size: 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
-                    Student Login
-                </h1>
-                <p style="color: var(--text-muted);">Welcome back to Instant Library</p>
+    <div class="landing-container">
+        <!-- Navigation Bar -->
+        <nav class="landing-nav">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <span class="logo-icon">📚</span>
+                    <span class="logo-text">Instant Library</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="register.html" class="btn-primary small">Get Started</a>
+                </div>
             </div>
+        </nav>
 
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+        <div class="auth-wrapper">
+            <div class="glass-card" style="max-width: 420px; width: 100%;">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h1 class="hero-title" style="font-size: 2rem; margin-bottom: 0.5rem;">
+                        Student <span class="gradient-text">Login</span>
+                    </h1>
+                    <p style="color: var(--text-muted);">Welcome back to Instant Library</p>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="••••••••">
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="••••••••">
+                    </div>
+
+                    <div id="error-container" style="display: none;" class="error-message"></div>
+
+                    <button type="submit" id="submit-btn" class="btn-primary"
+                        style="width: 100%; margin-top: 1rem; padding: 1rem;">
+                        Sign In
+                    </button>
+
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <a href="login.html" style="color: var(--text-muted); text-decoration: underline;">
+                            ← Back to Role Selection
+                        </a>
+                    </div>
+                </form>
+
+                <div
+                    style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1); text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Don't have an account? <a href="register.html"
+                            style="font-weight: 600; color: var(--primary);">Register here</a>
+                    </p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="forgot-password.html" style="color: var(--text-muted); font-size: 0.9rem;">Forgot
+                            password?</a>
+                    </p>
                 </div>
-
-                <div id="error-container" style="display: none;"></div>
-
-                <button type="submit" id="submit-btn" class="btn-primary"
-                    style="width: 100%; margin-top: 1rem; padding: 1rem;">
-                    Sign In
-                </button>
-
-                <div style="margin-top: 1.5rem; text-align: center;">
-                    <a href="login.html" style="color: var(--text-muted); text-decoration: underline;">
-                        ← Back to Role Selection
-                    </a>
-                </div>
-            </form>
-
-            <div
-                style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1); text-align: center;">
-                <p style="color: var(--text-muted); font-size: 0.9rem;">
-                    Don't have an account? <a href="register.html" style="font-weight: 600;">Register here</a>
-                </p>
-                <p style="margin-top: 0.5rem;">
-                    <a href="forgot-password.html" style="color: var(--text-muted); font-size: 0.9rem;">Forgot
-                        password?</a>
-                </p>
             </div>
         </div>
     </div>

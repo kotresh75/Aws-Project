@@ -5,7 +5,6 @@
 
 // Student navigation links
 const studentLinks = [
-    { path: 'about.html', icon: 'ℹ️', label: 'About' },
     { path: 'dashboard.html', icon: '🏠', label: 'Dashboard' },
     { path: 'catalog.html', icon: '📖', label: 'Book Catalog' },
     { path: 'requests.html', icon: '📋', label: 'My Requests' },
@@ -16,7 +15,6 @@ const studentLinks = [
 
 // Staff navigation links
 const staffLinks = [
-    { path: 'about.html', icon: 'ℹ️', label: 'About' },
     { path: 'dashboard.html', icon: '🏠', label: 'Dashboard' },
     { path: 'book-management.html', icon: '📚', label: 'Manage Books' },
     { path: 'request-management.html', icon: '📋', label: 'Manage Requests' },

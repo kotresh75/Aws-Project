@@ -21,7 +21,6 @@ function Sidebar({ isOpen, toggleSidebar }) {
     };
 
     const studentLinks = [
-        { path: '/about', icon: 'ℹ️', label: 'About' },
         { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
         { path: '/catalog', icon: '📖', label: 'Book Catalog' },
         { path: '/requests', icon: '📋', label: 'My Requests' },
@@ -31,7 +30,6 @@ function Sidebar({ isOpen, toggleSidebar }) {
     ];
 
     const staffLinks = [
-        { path: '/about', icon: 'ℹ️', label: 'About' },
         { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
         { path: '/book-management', icon: '📚', label: 'Manage Books' },
         { path: '/request-management', icon: '📋', label: 'Manage Requests' },

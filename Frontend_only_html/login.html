@@ -8,40 +8,70 @@
     <title>Login - Instant Library</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/landing.css">
 </head>
 
 <body>
-    <div class="page-center">
-        <div class="glass-card" style="max-width: 480px; width: 100%; text-align: center;">
-            <div style="margin-bottom: 2rem;">
-                <h1
-                    style="font-size: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">
-                    Welcome Back
-                </h1>
-                <p style="color: var(--text-muted);">Choose your role to continue</p>
+    <div class="landing-container">
+        <!-- Navigation Bar -->
+        <nav class="landing-nav">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <span class="logo-icon">📚</span>
+                    <span class="logo-text">Instant Library</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="register.html" class="btn-primary small">Get Started</a>
+                </div>
             </div>
+        </nav>
 
-            <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem;">
-                <a href="student-login.html" class="btn-primary"
-                    style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.25rem 2rem; font-size: 1.1rem; text-decoration: none;">
-                    <span style="font-size: 1.5rem;">🎓</span>
-                    <span>Student Login</span>
-                </a>
+        <!-- Main Content Area -->
+        <div class="page-center" style="min-height: calc(100vh - 80px); padding-top: 80px;">
+            <div style="width: 100%; max-width: 1000px; padding: 2rem;">
+                <div style="text-align: center; margin-bottom: 4rem;">
+                    <div class="hero-badge">Welcome Back</div>
+                    <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1.5rem;">
+                        Choose Your <span class="gradient-text">Portal</span>
+                    </h1>
+                    <p class="hero-subtitle" style="margin-bottom: 0;">
+                        Select your role to access the library dashboard.
+                    </p>
+                </div>
 
-                <a href="staff-login.html" class="btn-secondary"
-                    style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.25rem 2rem; font-size: 1.1rem; text-decoration: none;">
-                    <span style="font-size: 1.5rem;">👤</span>
-                    <span>Staff Login</span>
-                </a>
-            </div>
+                <div class="features-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <!-- Student Card -->
+                    <a href="student-login.html" class="glass-card role-card"
+                        style="text-decoration: none; display: block; padding: 3rem 2rem; text-align: center; transition: all 0.3s ease;">
+                        <div
+                            style="width: 80px; height: 80px; background: rgba(79, 70, 229, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
+                            🎓
+                        </div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main);">Student</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;">
+                            Access book catalog, request resources, and manage your study materials.
+                        </p>
+                        <span class="btn-primary" style="display: block; width: 100%;">Student Login</span>
+                    </a>
 
-            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(0,0,0,0.1);">
-                <p style="color: var(--text-muted); font-size: 0.95rem;">
-                    New student? <a href="register.html" style="font-weight: 600;">Register here</a>
-                </p>
-                <p style="margin-top: 1rem;">
-                    <a href="index.html" style="color: var(--text-muted); font-size: 0.9rem;">← Back to Home</a>
-                </p>
+                    <!-- Staff Card -->
+                    <a href="staff-login.html" class="glass-card role-card"
+                        style="text-decoration: none; display: block; padding: 3rem 2rem; text-align: center; transition: all 0.3s ease;">
+                        <div
+                            style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
+                            👨‍💼
+                        </div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main);">Staff</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;">
+                            Manage inventory, process student requests, and track library assets.
+                        </p>
+                        <span class="btn-secondary"
+                            style="display: block; width: 100%; border-color: var(--text-muted);">Staff Login</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
