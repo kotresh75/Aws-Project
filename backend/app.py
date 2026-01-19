@@ -131,9 +131,26 @@ def generate_otp():
 
 def print_otp_to_terminal(email, otp):
     """Print OTP to terminal (for development only)"""
+    # Generate formatted HTML just for show/logging
+    html_body = f"""
+    <p>Your One-Time Password (OTP) for registration/verification is:</p>
+    <div style="background: #EEF2FF; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+        <span style="font-size: 32px; font-weight: 800; color: #4F46E5; letter-spacing: 4px;">{otp}</span>
+    </div>
+    <p>This OTP is valid for 10 minutes. Do not share it with anyone.</p>
+    """
+    html_content = generate_email_html("Verification OTP", html_body, action_text="Verify Account", action_url="#")
+    
     print(f"\n{'='*60}")
-    print(f"🔐 OTP for {email}: {otp}")
+    print(f"🔐 SIMULATED EMAIL TO: {email}")
+    print(f"SUBJECT: Verification OTP")
+    print(f"CONTENT: {otp}")
+    print(f"HTML PREDVIEW GENERATED (See sns_logs.txt for full output)")
     print(f"{'='*60}\n")
+    
+    # Also log to file for "viewing"
+    with open("sns_logs.txt", "a", encoding='utf-8') as f:
+        f.write(f"\n[OTP ENTRY]\n{html_content}\n{'-'*60}\n")
 
 def user_exists_by_email(email):
     """Check if user exists by email"""
@@ -750,10 +767,52 @@ def create_notification(recipient, message, type='info'):
         print(f"Failed to create notification: {e}")
         return False
 
+def generate_email_html(subject, body_content, action_url=None, action_text=None):
+    """Generate a beautiful Glassmorphic HTML email matching the app theme."""
+    action_button = ""
+    if action_url and action_text:
+        action_button = f"""
+            <a href="{action_url}" style="display:inline-block; background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); color:white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px;">
+                {action_text}
+            </a>
+        """
+    
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <body style="margin:0; padding:0; background-color: #f3f4f6; font-family: 'Inter', sans-serif;">
+        <div style="max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%); padding: 32px 24px; text-align: center;">
+                <h1 style="margin:0; color:white; font-size: 24px; font-weight: 800;">Instant Library</h1>
+                <p style="margin:8px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Greenfield University</p>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 32px 24px;">
+                <h2 style="margin-top:0; color: #111827; font-size: 20px;">{subject}</h2>
+                <div style="color: #4B5563; line-height: 1.6; font-size: 16px;">
+                    {body_content}
+                </div>
+                {action_button}
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #E5E7EB;">
+                <p style="margin:0; color: #9CA3AF; font-size: 12px;">© {datetime.now().year} Greenfield University. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
 # ==================== SNS SIMULATION ====================
 def log_sns_notification(topic, recipient, subject, message):
     """Simulate sending an email via AWS SNS by logging to a file and creating in-app notification"""
     try:
+        # Generate Styled HTML Content
+        html_content = generate_email_html(subject, message)
+        
         # File Logging (SNS Simulation)
         log_entry = f"""
 {'='*60}
@@ -761,12 +820,14 @@ def log_sns_notification(topic, recipient, subject, message):
 TOPIC: {topic}
 TO:    {recipient}
 SUBJ:  {subject}
-BODY:  {message}
+BODY (Text): {message}
+BODY (HTML Preview):
+{html_content}
 {'='*60}
 """
-        with open("sns_logs.txt", "a") as f:
+        with open("sns_logs.txt", "a", encoding='utf-8') as f:
             f.write(log_entry)
-        print(log_entry) # Also print to terminal
+        print(f"📧 [Email Sent] To: {recipient} | Subject: {subject}") 
         
         # Create In-App Notification
         create_notification(recipient, f"{subject}: {message}", type='info')
