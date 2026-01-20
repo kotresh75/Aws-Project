@@ -19,7 +19,7 @@ Thumbs.db
 frontend/node_modules/
 frontend/package-lock.json
 frontend/yarn.lock
-frontend_react/DEPLOYMENT_STRATEGY_dont.md
+DEPLOYMENT_STRATEGY_dont.md
 
 # Python virtual environment and cache (backend)
 backend/venv/
