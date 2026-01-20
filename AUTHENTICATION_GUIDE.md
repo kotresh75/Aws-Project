@@ -85,7 +85,7 @@ python app.py
 2. Start frontend:
 
 ```bash
-cd frontend
+cd frontend_react
 npm install
 npm start
 ```
