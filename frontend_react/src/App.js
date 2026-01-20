@@ -26,10 +26,12 @@ import Notifications from './pages/Notifications';
 import BookManagement from './pages/BookManagement';
 import RequestManagement from './pages/RequestManagement';
 import About from './pages/About';
+import Chatbot from './components/Chatbot';
 
 function App() {
     return (
         <Router>
+            <Chatbot />
             <Routes>
                 <Route path="/" element={<Welcome />} />
                 <Route path="/about" element={<About />} />

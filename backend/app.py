@@ -6,6 +6,7 @@ import hashlib
 import os
 import random
 import string
+import google.generativeai as genai
 
 app = Flask(__name__)
 CORS(app)
@@ -1106,6 +1107,61 @@ def delete_user(email):
         return jsonify({'message': 'User deleted successfully'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# ==================== CHATBOT ROUTES ====================
+
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Configure Gemini API
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+
+@app.route('/api/chat', methods=['POST'])
+def chat_bot():
+    """Chat with AI Assistant"""
+    try:
+        data = request.json
+        user_message = data.get('message', '').strip()
+        
+        if not user_message:
+            return jsonify({'error': 'Message is required'}), 400
+            
+        if not GEMINI_API_KEY:
+            return jsonify({'response': "I'm sorry, my AI brain is currently offline. (Missing API Key). Please ask the developer to set the GEMINI_API_KEY environment variable."}), 200
+
+        # Create the model
+        # Create the model
+        model = genai.GenerativeModel('gemini-flash-latest')
+        
+        # Prepare book availability context
+        book_list_text = "Here is the current library catalog:\n"
+        for book_id, book in books_db.items():
+            status = "Available" if book['available_count'] > 0 else "Out of stock"
+            book_list_text += f"- {book['title']} by {book['author']} ({status}, {book['available_count']} copies left)\n"
+
+        # System instruction context
+        context = f"""
+        You are a helpful library assistant for Greenfield University. 
+        You help students find books, understand library rules, and track their requests.
+        Be polite, concise, and professional.
+        
+        {book_list_text}
+        
+        If a student asks for a book, check the list above. If it's not listed, say we don't have it.
+        """
+        
+        chat = model.start_chat(history=[])
+        response = chat.send_message(f"{context}\nUser: {user_message}")
+        
+        return jsonify({'response': response.text}), 200
+        
+    except Exception as e:
+        print(f"Chat error: {e}")
+        return jsonify({'response': f"Error: {str(e)}"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

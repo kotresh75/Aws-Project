@@ -88,5 +88,15 @@ function initHeaderFooter() {
 document.addEventListener('DOMContentLoaded', function () {
     if (document.querySelector('.app-container')) {
         initHeaderFooter();
+
+        // Dynamic Chatbot Injection
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = 'styles/chatbot.css';
+        document.head.appendChild(cssLink);
+
+        const jsScript = document.createElement('script');
+        jsScript.src = 'js/chatbot.js';
+        document.body.appendChild(jsScript);
     }
 });
