@@ -39,7 +39,6 @@ Edit these values:
 ```python
 AWS_REGION = 'us-east-1'
 SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:InstantLibraryNotifications'
-STAFF_EMAIL = 'your-staff@email.com'
 ```
 
 ## Step 7: Attach IAM Role to EC2
@@ -155,3 +154,56 @@ Add these attributes:
 }
 ```
 Note: Password hash above = "123456"
+
+---
+
+## SNS Setup Guide (Manual)
+
+Follow these steps to configure AWS SNS for email notifications:
+
+### Step 1: Create SNS Topic
+```
+1. Go to AWS Console → SNS → Topics
+2. Click "Create topic"
+3. Type: Standard
+4. Name: InstantLibraryNotifications
+5. Click "Create topic"
+6. Copy the Topic ARN (e.g., arn:aws:sns:us-east-1:123456789:InstantLibraryNotifications)
+7. Paste ARN in AWS_app.py → SNS_TOPIC_ARN
+```
+
+### Step 2: Add Email Subscriptions
+Add each staff/admin email that should receive notifications:
+```
+1. Open your SNS Topic
+2. Click "Create subscription"
+3. Protocol: Email
+4. Endpoint: staff-email@example.com
+5. Click "Create subscription"
+6. Check inbox → Click confirmation link
+7. Repeat for each email address
+```
+
+### Step 3: Configure IAM Permissions
+Ensure EC2 instance has permission to publish to SNS:
+```
+Option A - Attach policy to EC2 IAM Role:
+  - Go to IAM → Roles → Select your EC2 role
+  - Add permission: AmazonSNSFullAccess
+
+Option B - Create custom policy:
+  {
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Action": "sns:Publish",
+      "Resource": "arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:InstantLibraryNotifications"
+    }]
+  }
+```
+
+### Step 4: Test SNS
+```bash
+# Test from EC2 instance
+aws sns publish --topic-arn "YOUR_TOPIC_ARN" --message "Test notification" --subject "Test"
+```

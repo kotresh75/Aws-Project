@@ -33,12 +33,7 @@ CORS(app)
 # AWS Region (e.g., us-east-1, ap-south-1)
 AWS_REGION = 'us-east-1'
 
-# SNS Topic ARN - Create in AWS Console: SNS → Topics → Create Topic
-# Copy the ARN after creating and paste here
 SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:InstantLibraryNotifications'
-
-# Default staff email for notifications
-STAFF_EMAIL = 'staff@greenfield.edu'
 
 # (Optional) Gemini API Key for AI Chatbot
 GEMINI_API_KEY = ''
