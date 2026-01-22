@@ -1,0 +1,157 @@
+# AWS Deployment Commands
+
+## Step 1: Launch EC2 Instance
+```
+AMI: Amazon Linux 2023
+Instance Type: t2.micro
+Security Group: Allow SSH (22), HTTP (80), TCP (5000)
+```
+
+## Step 2: Connect to EC2
+```bash
+ssh -i your-key.pem ec2-user@your-ec2-public-ip
+```
+
+## Step 3: Install Dependencies
+```bash
+sudo yum update -y
+sudo yum install python3 python3-pip git -y
+```
+
+## Step 4: Clone Repository
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO/backend
+```
+
+## Step 5: Setup Python Environment
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements_aws.txt
+```
+
+## Step 6: Configure AWS_app.py
+```bash
+nano AWS_app.py
+```
+Edit these values:
+```python
+AWS_REGION = 'us-east-1'
+SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:InstantLibraryNotifications'
+STAFF_EMAIL = 'your-staff@email.com'
+```
+
+## Step 7: Attach IAM Role to EC2
+```
+AWS Console → IAM → Roles → Create Role
+Use Case: EC2
+Policies: AmazonDynamoDBFullAccess, AmazonSNSFullAccess
+Attach to EC2 instance
+```
+
+## Step 8: Create SNS Topic
+```
+AWS Console → SNS → Topics → Create Topic → Standard
+Name: InstantLibraryNotifications
+Copy ARN → Paste in AWS_app.py
+```
+
+## Step 9: Add SNS Email Subscription
+```
+AWS Console → SNS → Your Topic → Create Subscription
+Protocol: Email
+Endpoint: your-staff@email.com
+Confirm via email link
+```
+
+## Step 10: Run Application
+```bash
+# Development
+python AWS_app.py
+
+# Production
+nohup gunicorn -w 4 -b 0.0.0.0:5000 AWS_app:app &
+```
+
+## Step 11: Test
+```bash
+curl http://localhost:5000/api/health
+```
+
+---
+
+## Default Login Credentials
+| Role | Email | Password |
+|------|-------|----------|
+| Staff | staff@gmail.com | 123456 |
+| Student | student@gmail.com | 123456 |
+
+---
+
+## DynamoDB Tables Setup (Manual)
+
+Create these 5 tables in AWS Console → DynamoDB → Tables → Create Table
+
+### Table 1: InstantLibrary_Users
+```
+Table Name: InstantLibrary_Users
+Partition Key: email (String)
+Settings: Default settings
+```
+
+### Table 2: InstantLibrary_Books
+```
+Table Name: InstantLibrary_Books
+Partition Key: id (String)
+Settings: Default settings
+```
+
+### Table 3: InstantLibrary_Requests
+```
+Table Name: InstantLibrary_Requests
+Partition Key: request_id (String)
+Settings: Default settings
+```
+
+### Table 4: InstantLibrary_Notifications
+```
+Table Name: InstantLibrary_Notifications
+Partition Key: id (String)
+Settings: Default settings
+```
+
+### Table 5: InstantLibrary_OTP
+```
+Table Name: InstantLibrary_OTP
+Partition Key: email (String)
+Settings: Default settings
+```
+After creating, enable TTL:
+```
+Select table → Additional settings → Time to live (TTL) → Turn on
+TTL attribute: ttl
+```
+
+---
+
+## Add Initial Staff Account (Required)
+
+After creating tables, add a staff user manually:
+
+```
+DynamoDB → Tables → InstantLibrary_Users → Explore table items → Create item
+```
+
+Add these attributes:
+```json
+{
+  "email": "staff@gmail.com",
+  "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+  "name": "Staff Member",
+  "role": "staff",
+  "verified": true,
+  "created_at": "2026-01-22T00:00:00"
+}
+```
+Note: Password hash above = "123456"
