@@ -14,8 +14,7 @@ gunicorn==21.2.0
 # Optional: AI Chatbot
 google-generativeai
 
-# Environment Variables
-python-dotenv
+
 
 # Production Security (recommended)
 # Uncomment for production deployment

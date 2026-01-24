@@ -33,10 +33,10 @@ CORS(app)
 # AWS Region (e.g., us-east-1, ap-south-1)
 AWS_REGION = 'us-east-1'
 
-SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:InstantLibraryNotifications'
+SNS_TOPIC_ARN = ''
 
 # (Optional) Gemini API Key for AI Chatbot
-GEMINI_API_KEY = ''
+GEMINI_API_KEY = 'AIzaSyApedFAAJOa5pCgkRLr0l6HIGNXfmxREgY'
 
 # ============================================
 
@@ -46,13 +46,14 @@ try:
     sns_client = boto3.client('sns', region_name=AWS_REGION)
     
     # DynamoDB Tables
+    # NOTE: Tables must be created manually in AWS Console without running any setup script
     users_table = dynamodb.Table('InstantLibrary_Users')
     books_table = dynamodb.Table('InstantLibrary_Books')
     requests_table = dynamodb.Table('InstantLibrary_Requests')
     notifications_table = dynamodb.Table('InstantLibrary_Notifications')
     otp_table = dynamodb.Table('InstantLibrary_OTP')
     
-    print("✅ AWS services initialized successfully")
+    print("✅ AWS services initialized successfully (Manual Table Setup Required)")
 except Exception as e:
     print(f"⚠️ AWS initialization error: {e}")
     print("Running in fallback mode - ensure AWS credentials are configured")
@@ -566,6 +567,14 @@ def verify_registration_otp():
         
         if create_user(user_data):
             delete_otp(email)
+            
+            # Notify Admin of new registration
+            send_sns_notification(
+                'admin@library.com',
+                f"New Registration: {email}",
+                f"New student registered:<br>Name: <strong>{pending_data['name']}</strong><br>Email: {email}<br>Role: {pending_data['role']}"
+            )
+
             return jsonify({
                 'message': 'Registration completed successfully!',
                 'email': email,
@@ -611,6 +620,13 @@ def register_staff_by_staff():
         }
         
         if create_user(user_data):
+            # Notify Admin
+            send_sns_notification(
+                'admin@library.com',
+                f"New Staff Added: {new_email}",
+                f"New staff member added by {caller_email}:<br>Name: <strong>{name}</strong><br>Email: {new_email}"
+            )
+
             return jsonify({
                 'message': 'Staff account created successfully',
                 'email': new_email,
@@ -642,6 +658,13 @@ def login():
         if not verify_password(password, user['password']):
             return jsonify({'error': 'Invalid email or password'}), 401
         
+        # Send Login Notification
+        send_sns_notification(
+            'admin@library.com',
+            f"Login Alert: {email}",
+            f"User <strong>{user.get('name')}</strong> ({email}) logged in at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}."
+        )
+
         return jsonify({
             'message': 'Login successful',
             'email': email,
@@ -1015,13 +1038,13 @@ def create_request_route():
             )
             create_notification(email, f"Request submitted for '{book.get('title')}'", 'info')
             
-            # Notify staff
+            # Notify staff (Admin)
             send_sns_notification(
-                STAFF_EMAIL,
+                'admin@library.com',
                 f"New Book Request: {book.get('title')}",
                 f"Student <strong>{user.get('name')}</strong> has requested '<strong>{book.get('title')}</strong>'.<br>Roll No: {request_data.get('roll_no', 'N/A')}<br>Status: Pending"
             )
-            create_notification(STAFF_EMAIL, f"New request from {user.get('name')} for '{book.get('title')}'", 'info')
+            create_notification('admin@library.com', f"New request from {user.get('name')} for '{book.get('title')}'", 'info')
             
             return jsonify({
                 'message': 'Request submitted successfully',
@@ -1124,6 +1147,13 @@ def update_request_route(request_id):
                 req.get('email'),
                 f"Request for '{req.get('book_name')}' is now {status.upper()}",
                 'info'
+            )
+            
+            # Notify Admin of status change
+            send_sns_notification(
+                'admin@library.com',
+                f"Request Processed: {req.get('book_name')}",
+                f"Request for '<strong>{req.get('book_name')}</strong>' was marked as <strong>{status.upper()}</strong>.<br>Student: {req.get('email')}"
             )
         
         updated_request = get_request_by_id(request_id)
