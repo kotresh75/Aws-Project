@@ -1,15 +1,15 @@
 # AWS Deployment Requirements
 # ============================
 # Core Framework
-flask==2.3.0
-flask-cors==4.0.0
+flask
+flask-cors
 
 # AWS SDK
-boto3==1.28.0
-botocore>=1.31.0
+boto3
+botocore
 
 # Production Server
-gunicorn==21.2.0
+gunicorn
 
 # Optional: AI Chatbot
 google-generativeai
@@ -18,5 +18,5 @@ google-generativeai
 
 # Production Security (recommended)
 # Uncomment for production deployment
-# Flask-Limiter==3.5.0
-# Flask-Talisman==1.1.0
+# Flask-Limiter
+# Flask-Talisman

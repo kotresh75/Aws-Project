@@ -10,7 +10,7 @@ AWS Services Used:
 Clone repository → Configure below → Run setup_dynamodb.py → Deploy
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import boto3
 from botocore.exceptions import ClientError
@@ -23,7 +23,7 @@ import uuid
 import json
 from decimal import Decimal
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../static', static_url_path='')
 CORS(app)
 
 # ============================================
@@ -1297,15 +1297,94 @@ def health():
             'timestamp': datetime.now().isoformat()
         }), 200
 
-@app.route('/', methods=['GET'])
+# ==================== FRONTEND ROUTES ====================
+
+@app.route('/')
 def root():
-    """Root endpoint"""
-    return jsonify({
-        'app': 'Greenfield University Instant Library',
-        'version': '1.0.0',
-        'status': 'running',
-        'documentation': '/api/health'
-    }), 200
+    """Serve index page"""
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    """Serve any static file"""
+    return send_from_directory(app.static_folder, path)
+
+@app.route('/login')
+def login_page():
+    return send_from_directory(app.static_folder, 'login.html')
+
+@app.route('/register')
+def register_page():
+    return send_from_directory(app.static_folder, 'register.html')
+
+@app.route('/dashboard')
+def dashboard_page():
+    return send_from_directory(app.static_folder, 'dashboard.html')
+
+@app.route('/catalog')
+def catalog_page():
+    return send_from_directory(app.static_folder, 'catalog.html')
+
+@app.route('/requests')
+def requests_page():
+    return send_from_directory(app.static_folder, 'requests.html')
+
+@app.route('/profile')
+def profile_page():
+    return send_from_directory(app.static_folder, 'profile.html')
+
+@app.route('/notifications')
+def notifications_page():
+    return send_from_directory(app.static_folder, 'notifications.html')
+
+@app.route('/settings')
+def settings_page():
+    return send_from_directory(app.static_folder, 'settings.html')
+
+@app.route('/support')
+def support_page():
+    return send_from_directory(app.static_folder, 'support.html')
+
+@app.route('/about')
+def about_page():
+    return send_from_directory(app.static_folder, 'about.html')
+
+@app.route('/terms')
+def terms_page():
+    return send_from_directory(app.static_folder, 'terms.html')
+
+@app.route('/privacy')
+def privacy_page():
+    return send_from_directory(app.static_folder, 'privacy.html')
+
+# Staff Pages
+@app.route('/staff-login')
+def staff_login_page():
+    return send_from_directory(app.static_folder, 'staff-login.html')
+
+@app.route('/book-management')
+def book_management_page():
+    return send_from_directory(app.static_folder, 'book-management.html')
+
+@app.route('/request-management')
+def request_management_page():
+    return send_from_directory(app.static_folder, 'request-management.html')
+
+@app.route('/staff-management')
+def staff_management_page():
+    return send_from_directory(app.static_folder, 'staff-management.html')
+
+@app.route('/student-management')
+def student_management_page():
+    return send_from_directory(app.static_folder, 'student-management.html')
+
+@app.route('/forgot-password')
+def forgot_password_page():
+    return send_from_directory(app.static_folder, 'forgot-password.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.static_folder, '404.html'), 404
 
 # ==================== APPLICATION ENTRY POINT ====================
 
