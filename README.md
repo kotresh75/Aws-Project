@@ -64,8 +64,48 @@ python AWS_app.py
 ```
 The app will start at `http://localhost:5000`.
 
-## 📝 Deployment
-Refer to [AWS_DEPLOYMENT_GUIDE.md](backend/AWS_DEPLOYMENT_GUIDE.md) for detailed steps on deploying this application to an EC2 instance.
+## 📝 Deployment to AWS EC2
+
+Here is the quick command reference for deploying to Amazon Linux 2023:
+
+### 1. Connect to your Instance
+```bash
+ssh -i "your-key.pem" ec2-user@your-ec2-public-ip
+```
+
+### 2. Install System Dependencies
+```bash
+sudo yum update -y
+sudo yum install python3 python3-pip git -y
+```
+
+### 3. Clone & Setup
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/instant-library.git
+cd instant-library/backend
+
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install Python requirements
+pip install -r requirements_aws.txt
+```
+
+### 4. Configure Application
+Edit the `AWS_app.py` file to add your AWS Region and SNS Topic ARN:
+```bash
+nano AWS_app.py
+```
+
+### 5. Run in Production
+Use `gunicorn` to run the application in the background:
+```bash
+nohup gunicorn -w 4 -b 0.0.0.0:5000 AWS_app:app &
+```
+
+*For detailed troubleshooting and manual DynamoDB setup, see [AWS_DEPLOYMENT_GUIDE.md](backend/AWS_DEPLOYMENT_GUIDE.md)*
 
 ## 👥 Authors
 *   **Greenfield University Cloud Solutions Dept.**
