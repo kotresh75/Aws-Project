@@ -78,6 +78,55 @@ def setup_dynamodb():
             
         except Exception as e:
             print(f"❌ Failed to create {table_name}: {e}")
+
+    # Create Default Staff Account
+    print("\n👤 Creating default staff account...")
+    try:
+        users_table = dynamodb.Table('InstantLibrary_Users')
+        import hashlib
+        from datetime import datetime
+        
+        # Check if staff exists
+        if 'InstantLibrary_Users' in existing_tables:
+             # If table existed before script ran, we might still need to add staff
+             pass
+        else:
+            # Wait a moment for table to be active if we just created it
+            time.sleep(5)
+
+        staff_email = "staff@gmail.com"
+        staff_password = "123456"
+        hashed_password = hashlib.sha256(staff_password.encode()).hexdigest()
+        
+        # Try to get item to see if it exists
+        try:
+            resp = users_table.get_item(Key={'email': staff_email})
+            if 'Item' in resp:
+                print(f"ℹ️  Staff account {staff_email} already exists.")
+            else:
+                users_table.put_item(Item={
+                    'email': staff_email,
+                    'password': hashed_password,
+                    'name': 'Default Staff',
+                    'role': 'staff',
+                    'verified': True,
+                    'created_at': datetime.now().isoformat()
+                })
+                print(f"✅ Created staff account: {staff_email} / {staff_password}")
+        except Exception as e:
+             # Fallback if table is not yet ready or other error
+             users_table.put_item(Item={
+                'email': staff_email,
+                'password': hashed_password,
+                'name': 'Default Staff',
+                'role': 'staff',
+                'verified': True,
+                'created_at': datetime.now().isoformat()
+            })
+             print(f"✅ Created staff account: {staff_email} / {staff_password}")
+             
+    except Exception as e:
+        print(f"❌ Failed to create staff account: {e}")
             
     print("\n🎉 DynamoDB setup complete!")
 
