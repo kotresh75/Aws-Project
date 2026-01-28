@@ -1,15 +1,20 @@
 # AWS Deployment Guide - Step-by-Step
 
-Follow these steps exactly to deploy your application perfectly.
+Follow these steps in this exact order to deploy your application.
 
-## Step 1: Create IAM Role (Permissions)
-1. Go to AWS Console → Search **IAM** → **Roles**.
-2. Click **Create role**.
-3. Select **AWS Service** → Choose **EC2** → Click **Next**.
-4. In Permissions, search for and select these two:
-   - `AmazonDynamoDBFullAccess`
-   - `AmazonSNSFullAccess`
-5. Click **Next**, Name the role (e.g., `LibraryRole`), and click **Create role**.
+## Step 1: Launch EC2 Instance (Server)
+1. Go to AWS Console → **EC2** → **Launch Instance**.
+2. Name: `LibraryServer`.
+3. OS Image (AMI): **Amazon Linux 2023**.
+4. **Key Pair (Login Access)**:
+   - Click **Create new key pair**.
+   - Name: `LibraryKey`.
+   - Click **Create key pair**.
+   - *Select this new key in the dropdown.*
+5. **Network Settings** → **Edit**:
+   - **Add Security Group Rule**: Type `HTTP` → Source `Anywhere (0.0.0.0/0)`.
+   - **Add Security Group Rule**: Type `Custom TCP` → Port `5000` → Source `Anywhere (0.0.0.0/0)`.
+6. Click **Launch Instance**.
 
 ## Step 2: Create DynamoDB Tables (Database)
 Go to **DynamoDB** → **Tables** → **Create Table** for each of the following:
@@ -36,29 +41,24 @@ Go to **DynamoDB** → **Tables** → **Create Table** for each of the following
 5. Endpoint: Enter your email (e.g., `veerkotresh@gmail.com`).
 6. **Check your Email Inbox** and click "Confirm Subscription".
 
-## Step 4: Launch EC2 Instance (Server)
-1. Go to **EC2** → **Launch Instance**.
-2. Name: `LibraryServer`.
-3. OS Image (AMI): **Amazon Linux 2023**.
-4. Key Pair: Select your key (or create one).
-5. **Network Settings** → **Edit**:
-   - **Add Security Group Rule**: Type `HTTP` → Source `Anywhere (0.0.0.0/0)`.
-   - **Add Security Group Rule**: Type `Custom TCP` → Port `5000` → Source `Anywhere (0.0.0.0/0)`.
-6. Click **Launch Instance**.
+## Step 4: Create & Attach IAM Role (Permissions)
+**Part A: Create Role**
+1. Go to **IAM** → **Roles** → **Create role**.
+2. Select **AWS Service** → **EC2** → **Next**.
+3. Permissions: Select `AmazonDynamoDBFullAccess` and `AmazonSNSFullAccess`.
+4. Name: `LibraryRole` → **Create role**.
 
-## Step 5: Attach IAM Role
-*Only if you didn't select it during launch:*
-1. Go to **EC2 Dashboard** → Select your Instance.
+**Part B: Attach to EC2**
+1. Go to **EC2 Dashboard** → Select your Instance (`LibraryServer`).
 2. Click **Actions** → **Security** → **Modify IAM role**.
-3. Select the role you created in Step 1 (e.g., `LibraryRole`).
-4. Click **Update IAM role**.
+3. Select `LibraryRole` → **Update IAM role**.
 
-## Step 6: Connect & Deploy Application
+## Step 5: AWS Deployment (Connect & Run)
 1. Select Instance → **Connect** → **EC2 Instance Connect** → Connect.
-2. Run these commands one by one:
+2. Run these commands:
 
 ```bash
-# 1. Update System & Install Tools
+# 1. Update & Install
 sudo yum update -y
 sudo yum install -y python3 python3-pip git
 
@@ -66,19 +66,18 @@ sudo yum install -y python3 python3-pip git
 git clone https://github.com/kotresh75/Aws-Project.git
 cd Aws-Project/backend
 
-# 3. Install Dependencies
+# 3. Install Requirements
 pip install -r requirements_aws.txt
 
 # 4. Configure App (Add SNS ARN & API Key)
 nano AWS_app.py
-# -> Use Arrow Keys to find SNS_TOPIC_ARN and GEMINI_API_KEY
-# -> Delete the empty quotes and Paste your values
-# -> Press Ctrl + X, then Y, then Enter to save
+# -> Find SNS_TOPIC_ARN and paste your ARN from Step 3
+# -> Find GEMINI_API_KEY and paste your Key
+# -> Save: Ctrl+X, Y, Enter
 
-# 5. Run the Server
+# 5. Run Server
 python3 AWS_app.py
 ```
 
-3. **Success!**
-   - Open your browser and go to: `http://YOUR_EC2_IP:5000`
+3. **Open in Browser**: `http://YOUR_EC2_IP:5000`
    - App will auto-create default users (`staff@gmail.com` / `student@gmail.com`).
