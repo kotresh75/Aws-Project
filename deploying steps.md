@@ -1,5 +1,7 @@
 # AWS Deployment Guide - Step-by-Step
 
+**⚠️ CRITICAL: You MUST select "US East (N. Virginia) us-east-1" in the top-right corner of your AWS Console before starting. Your code is hardcoded to this region.**
+
 Follow these steps in this exact order to deploy your application.
 
 ## Step 1: Launch EC2 Instance (Server)
@@ -71,9 +73,18 @@ pip install -r requirements_aws.txt
 
 # 4. Configure App (Add SNS ARN & API Key)
 nano AWS_app.py
-# -> Find SNS_TOPIC_ARN and paste your ARN from Step 3
-# -> Find GEMINI_API_KEY and paste your Key
-# -> Save: Ctrl+X, Y, Enter
+
+# --- NANO EDITOR STEPS ---
+# 1. Use Arrow Keys to scroll down to line 36 (SNS_TOPIC_ARN).
+# 2. Delete the empty quotes ''.
+# 3. Paste your ARN inside quotes: 'arn:aws:sns:...' (Right-click to paste).
+# 4. Scroll down to line 39 (GEMINI_API_KEY).
+# 5. Paste your API Key inside quotes like: 'AIzaSy...'
+# 6. Save & Exit:
+#    - Press Ctrl + O (Write Out)
+#    - Press Enter (Confirm File Name)
+#    - Press Ctrl + X (Exit)
+# -------------------------
 
 # 5. Run Server
 python3 AWS_app.py

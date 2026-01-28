@@ -36,7 +36,7 @@ AWS_REGION = 'us-east-1'
 SNS_TOPIC_ARN = ''
 
 # (Optional) Gemini API Key for AI Chatbot
-GEMINI_API_KEY = 'AIzaSyApedFAAJOa5pCgkRLr0l6HIGNXfmxREgY'#invaild API Key no need to worry about it    
+GEMINI_API_KEY = ''    
 
 # ============================================
 
