@@ -53,9 +53,9 @@ try:
     notifications_table = dynamodb.Table('InstantLibrary_Notifications')
     otp_table = dynamodb.Table('InstantLibrary_OTP')
     
-    print("✅ AWS services initialized successfully (Manual Table Setup Required)")
+    print("[+] AWS services initialized successfully (Manual Table Setup Required)")
 except Exception as e:
-    print(f"⚠️ AWS initialization error: {e}")
+    print(f"[!] AWS initialization error: {e}")
     print("Running in fallback mode - ensure AWS credentials are configured")
 
 
@@ -1395,7 +1395,7 @@ def health():
 
 def create_default_users():
     """Create default staff and student accounts if they don't exist"""
-    print("🔄 Checking for default users...")
+    print("[*] Checking for default users...")
     
     # Define default users
     default_users = [
@@ -1430,14 +1430,14 @@ def create_default_users():
                 
                 # Create user
                 if create_user(user_data):
-                    print(f"   ✅ Created {user['email']}")
+                    print(f"   [+] Created {user['email']}")
                 else:
-                    print(f"   ❌ Failed to create {user['email']}")
+                    print(f"   [X] Failed to create {user['email']}")
             else:
-                print(f"   ℹ️  {user['email']} already exists.")
+                print(f"   [i]  {user['email']} already exists.")
         
         except Exception as e:
-            print(f"   ⚠️  Error checking/creating {user['email']}: {e}")
+            print(f"   [!]  Error checking/creating {user['email']}: {e}")
 
 # ==================== APPLICATION ENTRY POINT ====================
 
@@ -1447,9 +1447,9 @@ if __name__ == '__main__':
         if 'users_table' in globals():
             create_default_users()
         else:
-            print("⚠️ Skipping default user creation (DynamoDB not initialized)")
+            print("[!] Skipping default user creation (DynamoDB not initialized)")
     except Exception as e:
-        print(f"⚠️ Error during initialization: {e}")
+        print(f"[!] Error during initialization: {e}")
 
     # For local development
     app.run(debug=True, host='0.0.0.0', port=5000)
