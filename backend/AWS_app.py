@@ -1390,12 +1390,75 @@ def health():
 
 
 
+
+# ==================== INITIALIZATION ====================
+
+def create_default_users():
+    """Create default staff and student accounts if they don't exist"""
+    print("🔄 Checking for default users...")
+    
+    # Define default users
+    default_users = [
+        {
+            'email': 'staff@gmail.com',
+            'password': '123456',
+            'name': 'Default Staff',
+            'role': 'staff',
+            'verified': True
+        },
+        {
+            'email': 'student@gmail.com',
+            'password': '123456',
+            'name': 'Default Student',
+            'role': 'student',
+            'roll_no': 'GU001',
+            'semester': '1',
+            'year': '1',
+            'verified': True
+        }
+    ]
+
+    for user in default_users:
+        try:
+            # Check if user exists
+            existing = get_user_by_email(user['email'])
+            if not existing:
+                print(f"   Creating default {user['role']}: {user['email']}...")
+                # Hash password
+                user_data = user.copy()
+                user_data['password'] = hash_password(user['password'])
+                
+                # Create user
+                if create_user(user_data):
+                    print(f"   ✅ Created {user['email']}")
+                else:
+                    print(f"   ❌ Failed to create {user['email']}")
+            else:
+                print(f"   ℹ️  {user['email']} already exists.")
+        
+        except Exception as e:
+            print(f"   ⚠️  Error checking/creating {user['email']}: {e}")
+
 # ==================== APPLICATION ENTRY POINT ====================
 
 if __name__ == '__main__':
+    # Initialize default users on startup
+    try:
+        if 'users_table' in globals():
+            create_default_users()
+        else:
+            print("⚠️ Skipping default user creation (DynamoDB not initialized)")
+    except Exception as e:
+        print(f"⚠️ Error during initialization: {e}")
+
     # For local development
     app.run(debug=True, host='0.0.0.0', port=5000)
 else:
     # For production (gunicorn)
-    # Run with: gunicorn -w 4 -b 0.0.0.0:5000 AWS_app:app
-    pass
+    # Attempt to create users when running via Gunicorn too
+    try:
+        if 'users_table' in globals():
+            create_default_users()
+    except Exception as e:
+        print(f"⚠️ Error during production initialization: {e}")
+

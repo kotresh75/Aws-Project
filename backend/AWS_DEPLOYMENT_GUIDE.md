@@ -86,6 +86,8 @@ curl http://localhost:5000/api/health
 | Staff | staff@gmail.com | 123456 |
 | Student | student@gmail.com | 123456 |
 
+*Note: These accounts are automatically created when you run the application for the first time.*
+
 ---
 
 ## DynamoDB Tables Setup (Manual)
@@ -134,26 +136,9 @@ TTL attribute: ttl
 
 ---
 
-## Add Initial Staff Account (Required)
+## Add Initial Staff Account (Skipped)
 
-After creating tables, add a staff user manually:
-
-```
-DynamoDB → Tables → InstantLibrary_Users → Explore table items → Create item
-```
-
-Add these attributes:
-```json
-{
-  "email": "staff@gmail.com",
-  "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-  "name": "Staff Member",
-  "role": "staff",
-  "verified": true,
-  "created_at": "2026-01-22T00:00:00"
-}
-```
-Note: Password hash above = "123456"
+The application now **automatically creates the default staff and student accounts** when it starts up. You do effectively NOT need to add them manually anymore.
 
 ---
 

@@ -260,3 +260,44 @@ TO:    student@gmail.com
 SUBJ:  Request Update: Python Data Science Handbook
 BODY:  Your request for 'Python Data Science Handbook' has been updated to: APPROVED.
 ============================================================
+
+[OTP ENTRY]
+
+    <!DOCTYPE html>
+    <html>
+    <body style="margin:0; padding:0; background-color: #f3f4f6; font-family: 'Inter', sans-serif;">
+        <div style="max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%); padding: 32px 24px; text-align: center;">
+                <h1 style="margin:0; color:white; font-size: 24px; font-weight: 800;">Instant Library</h1>
+                <p style="margin:8px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Greenfield University</p>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 32px 24px;">
+                <h2 style="margin-top:0; color: #111827; font-size: 20px;">Verification OTP</h2>
+                <div style="color: #4B5563; line-height: 1.6; font-size: 16px;">
+                    
+    <p>Your One-Time Password (OTP) for registration/verification is:</p>
+    <div style="background: #EEF2FF; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+        <span style="font-size: 32px; font-weight: 800; color: #4F46E5; letter-spacing: 4px;">841253</span>
+    </div>
+    <p>This OTP is valid for 10 minutes. Do not share it with anyone.</p>
+    
+                </div>
+                
+            <a href="#" style="display:inline-block; background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); color:white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px;">
+                Verify Account
+            </a>
+        
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #E5E7EB;">
+                <p style="margin:0; color: #9CA3AF; font-size: 12px;">© 2026 Greenfield University. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+------------------------------------------------------------
