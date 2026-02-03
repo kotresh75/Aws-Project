@@ -21,3 +21,11 @@ env/
 # OS specific
 .DS_Store
 Thumbs.db
+
+# Screenshots
+Screenshots/
+
+# Project Documentation
+Project_Documentation.md
+Demo_Script.md
+demo video needs/
