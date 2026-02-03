@@ -576,7 +576,7 @@ def request_book(book_id):
 import google.generativeai as genai
 
 # Configure Gemini
-GENAI_API_KEY = "AIzaSyC5HXAe98Ep-c7DGTYMQGvioKJEWzXsB88"
+GENAI_API_KEY = ""
 genai.configure(api_key=GENAI_API_KEY)
 # Switch to 'gemini-flash-latest' for better quota
 model = genai.GenerativeModel('gemini-flash-latest')
