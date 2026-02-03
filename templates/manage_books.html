@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 4rem;">
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+        <div>
+            <div style="margin-bottom: 1rem;">
+                <a href="{{ url_for('staff_dashboard') }}" class="btn-outline"
+                    style="padding: 0.5rem 1rem; border-radius: 8px;">
+                    &larr; Back to Dashboard
+                </a>
+            </div>
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Manage <span class="text-gradient">Books</span></h1>
+            <p style="color: var(--text-secondary);">Add, update, or remove books from the library inventory.</p>
+        </div>
+        <button onclick="openModal('addBookModal')" class="btn btn-primary">
+            + Add New Book
+        </button>
+    </div>
+
+    <!-- Inventory Table -->
+    <div class="glass-panel" style="padding: 2rem;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cover</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Copies</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td style="color: var(--text-muted);">#{{ book.id }}</td>
+                    <td>
+                        {% if book.cover_url %}
+                        <img src="{{ book.cover_url }}" alt="Cover"
+                            style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px;">
+                        {% else %}
+                        <div
+                            style="width: 40px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                            📖</div>
+                        {% endif %}
+                    </td>
+                    <td style="font-weight: 600;">{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td><span class="badge">{{ book.category }}</span></td>
+                    <td>
+                        {% if book.copies > 0 %}
+                        <span style="color: var(--success);">{{ book.copies }} In Stock</span>
+                        {% else %}
+                        <span style="color: var(--danger);">Out of Stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn-icon btn-approve"
+                                style="background: rgba(255, 255, 255, 0.1); color: white;" title="Edit">✎</a>
+                            <a href="{{ url_for('delete_book', book_id=book.id) }}" class="btn-icon btn-reject"
+                                title="Delete"
+                                onclick="return confirm('Are you sure you want to remove this book?')">🗑</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Book Modal -->
+<div id="addBookModal" class="modal-overlay">
+    <div class="glass-panel modal-content animate-fade-in">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+            <h2>Add New Book</h2>
+            <button onclick="closeModal('addBookModal')"
+                style="background:none; border:none; color:white; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+
+        <form action="{{ url_for('add_book') }}" method="POST">
+            <div class="form-group" style="position: relative;">
+                <label class="form-label">ISBN (Optional)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" name="isbn" id="isbnInput" class="form-control"
+                        placeholder="Enter ISBN to auto-fill">
+                    <button type="button" onclick="fetchBookDetails()" class="btn btn-outline"
+                        style="white-space: nowrap;">
+                        🔍 Fetch
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Book Title</label>
+                <input type="text" name="title" id="titleInput" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Cover Image URL</label>
+                <input type="text" name="cover_url" id="coverInput" class="form-control"
+                    placeholder="https://example.com/image.jpg">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label">Author</label>
+                    <input type="text" name="author" id="authorInput" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="category" id="categoryInput" class="form-control"
+                        placeholder="Genre or Category">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Number of Copies</label>
+                <input type="number" name="copies" class="form-control" value="1" min="1" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Add to Inventory</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Shared styles (Table, Modal, etc.) inherited from styles.css or similar blocks */
+    /* Table Styles */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th {
+        text-align: left;
+        padding: 1rem;
+        color: var(--text-muted);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+    }
+
+    .data-table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .data-table tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Action Buttons */
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        transition: transform 0.2s;
+    }
+
+    .btn-icon:hover {
+        transform: scale(1.1);
+    }
+
+    .btn-reject {
+        background: rgba(255, 0, 85, 0.2);
+        color: var(--danger);
+        text-decoration: none;
+    }
+
+    .badge {
+        padding: 0.2rem 0.6rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    /* Modal Styles */
+    /* Handled by style.css primarily now */
+</style>
+
+<script>
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    window.onclick = function (event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.classList.remove('active');
+        }
+    }
+
+    async function fetchBookDetails() {
+        const isbn = document.getElementById('isbnInput').value;
+        if (!isbn) {
+            showAlert("Input Required", "Please enter an ISBN first.");
+            return;
+        }
+
+        const btn = document.querySelector('button[onclick="fetchBookDetails()"]');
+        const originalText = btn.innerText;
+        btn.innerText = "⌛";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(`/api/fetch_book_details?isbn=${isbn}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('titleInput').value = data.title || '';
+                document.getElementById('authorInput').value = data.author || '';
+                document.getElementById('categoryInput').value = data.category || '';
+
+                if (data.cover_url) {
+                    document.getElementById('coverInput').value = data.cover_url;
+                } else {
+                    showAlert("Notice", "Book found, but no cover image is available in the database.");
+                }
+            } else {
+                showAlert("Error", data.error || "Book not found.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert("Connection Error", "Failed to fetch details. Please check your internet connection.");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

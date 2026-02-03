@@ -1,0 +1,142 @@
+<nav class="navbar glass-panel">
+    <div class="container navbar-content">
+        <a href="{{ url_for('index') }}" class="logo">
+            <span class="text-gradient">Greenfield</span><span style="color:white">Lib</span>
+        </a>
+
+        <ul class="nav-links">
+            <!-- Public Links -->
+            {% if not session.get('user') %}
+            <li class="{{ 'active' if request.endpoint == 'index' else '' }}"><a href="{{ url_for('index') }}">Home</a>
+            </li>
+            {% endif %}
+
+            <!-- Logged In Links -->
+            {% if session.get('user') %}
+            {% if session.get('role') == 'staff' %}
+            <!-- Staff Links: Dashboard First -->
+            <li class="{{ 'active' if request.endpoint == 'staff_dashboard' else '' }}">
+                <a href="{{ url_for('staff_dashboard') }}">Dashboard</a>
+            </li>
+            <li class="{{ 'active' if request.endpoint == 'manage_books' else '' }}">
+                <a href="{{ url_for('manage_books') }}">Books</a>
+            </li>
+            <li class="{{ 'active' if request.endpoint == 'manage_requests' else '' }}">
+                <a href="{{ url_for('manage_requests') }}">Requests</a>
+            </li>
+            <li class="{{ 'active' if request.endpoint == 'manage_students' else '' }}">
+                <a href="{{ url_for('manage_students') }}">Students</a>
+            </li>
+            {% else %}
+            <!-- Student Links: Catalog First -->
+            <li class="{{ 'active' if request.endpoint == 'catalog' else '' }}">
+                <a href="{{ url_for('catalog') }}">Book Catalog</a>
+            </li>
+            <li class="{{ 'active' if request.endpoint == 'my_requests' else '' }}">
+                <a href="{{ url_for('my_requests') }}">My Requests</a>
+            </li>
+            {% endif %}
+            {% endif %}
+
+            <!-- Common Links -->
+            <li class="{{ 'active' if request.endpoint == 'about' else '' }}"><a href="{{ url_for('about') }}">About</a>
+            </li>
+        </ul>
+
+        <div class="nav-actions">
+            {% if session.get('user') %}
+            <a href="{{ url_for('profile') }}"
+                style="color: var(--text-muted); font-size: 0.9rem; align-self: center; margin-right: 10px; text-decoration: none; transition: color 0.2s;"
+                onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='var(--text-muted)'">
+                Hi, {{ session.get('user').split('@')[0] }}
+            </a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline"
+                style="padding: 0.5rem 1.5rem; font-size: 0.9rem; border-color: var(--danger); color: var(--danger);">Logout</a>
+            {% else %}
+            <a href="{{ url_for('auth', mode='login') }}" class="btn btn-outline"
+                style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Login</a>
+            <a href="{{ url_for('auth', mode='register') }}" class="btn btn-primary"
+                style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Join Now</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* Navbar specific styles that might not separate well to style.css */
+    .navbar {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: var(--container-width);
+        padding: 1rem 0;
+        z-index: 1000;
+        border-radius: 50px;
+        transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        background: rgba(10, 14, 23, 0.95);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.8rem 0;
+    }
+
+    .navbar-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .nav-links a {
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        transition: color 0.3s;
+    }
+
+    .nav-links li.active a,
+    .nav-links a:hover {
+        color: var(--primary-color);
+    }
+
+    /* Optional active indicator */
+    .nav-links li.active a {
+        position: relative;
+    }
+
+    .nav-links li.active a::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary-color);
+        box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .nav-actions {
+        display: flex;
+        gap: 1rem;
+    }
+</style>

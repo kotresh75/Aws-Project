@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    .auth-tab {
+        flex: 1;
+        text-align: center;
+        padding: 1.5rem;
+        background: transparent;
+        color: var(--text-muted);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .auth-tab:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .auth-tab.active {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--primary-color);
+    }
+
+    .role-pill {
+        padding: 0.2rem 0.8rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-muted);
+        transition: all 0.3s ease;
+    }
+
+    .role-pill.active-student {
+        background: var(--primary-color);
+        color: var(--bg-main);
+    }
+
+    .role-pill.active-staff {
+        background: var(--accent-color);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="min-height: 90vh; display: flex; align-items: center; justify-content: center; padding-top: 120px;">
+
+    <div class="glass-panel animate-fade-in"
+        style="width: 100%; max-width: 450px; padding: 0; overflow: hidden; box-shadow: var(--shadow-md);">
+
+        <!-- Header / Tabs -->
+        <div style="display: flex; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <a href="{{ url_for('auth', mode='login', role=role) }}"
+                class="auth-tab {{ 'active' if mode == 'login' else '' }}">
+                Login
+            </a>
+            <a href="{{ url_for('auth', mode='register', role=role) }}"
+                class="auth-tab {{ 'active' if mode == 'register' else '' }}">
+                Register
+            </a>
+        </div>
+
+        <div style="padding: 2.5rem;">
+
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 style="margin-bottom: 0.5rem;">
+                    {% if mode == 'login' %}Welcome Back{% else %}Create Account{% endif %}
+                </h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    {% if role == 'student' %}Student Portal{% else %}Staff Portal{% endif %}
+                </p>
+            </div>
+
+            <form action="{{ url_for('login_post') }}" method="POST">
+                <input type="hidden" name="role" value="{{ role }}">
+                <input type="hidden" name="mode" value="{{ mode }}">
+
+                <!-- Role Switcher (Small) -->
+                <div
+                    style="margin-bottom: 1.5rem; display: flex; justify-content: center; gap: 1rem; font-size: 0.85rem;">
+                    <a href="{{ url_for('auth', mode=mode, role='student') }}"
+                        class="role-pill {{ 'active-student' if role == 'student' else '' }}">Student</a>
+                    <a href="{{ url_for('auth', mode=mode, role='staff') }}"
+                        class="role-pill {{ 'active-staff' if role == 'staff' else '' }}">Staff</a>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="name@greenfield.edu" required>
+                </div>
+
+                {% if mode == 'register' %}
+                <div class="form-group animate-fade-in">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="John Doe" required>
+                </div>
+
+                {% if role == 'student' %}
+                <div class="form-group animate-fade-in">
+                    <label class="form-label">Roll Number</label>
+                    <input type="text" name="roll_no" class="form-control" placeholder="Req. for Students" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group animate-fade-in">
+                        <label class="form-label">Semester</label>
+                        <select name="semester" class="form-control">
+                            <option value="1">1st</option>
+                            <option value="2">2nd</option>
+                            <option value="3">3rd</option>
+                            <option value="4">4th</option>
+                            <option value="5">5th</option>
+                            <option value="6">6th</option>
+                            <option value="7">7th</option>
+                            <option value="8">8th</option>
+                        </select>
+                    </div>
+                    <div class="form-group animate-fade-in">
+                        <label class="form-label">Year</label>
+                        <select name="year" class="form-control">
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                {% if mode == 'register' %}
+                <div class="form-group animate-fade-in">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                </div>
+                {% endif %}
+
+                {% if mode == 'login' %}
+                <div style="text-align: right; margin-bottom: 1.5rem;">
+                    <a href="{{ url_for('forgot_password') }}"
+                        style="font-size: 0.85rem; color: var(--text-muted);">Forgot Password?</a>
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    {% if mode == 'login' %}Sign In{% else %}Sign Up{% endif %}
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 4rem;">
+
+    <!-- Welcome Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+        <div>
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Staff <span class="text-gradient">Dashboard</span>
+            </h1>
+            <p style="color: var(--text-secondary);">Manage library inventory and student requests.</p>
+        </div>
+
+    </div>
+
+    <!-- Stats Row -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
+        <div class="glass-panel">
+            <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Pending Requests</h3>
+            <div style="font-size: 2rem; font-weight: 700; color: var(--warning);">
+                {{ requests | selectattr("status", "equalto", "pending") | list | length }}
+            </div>
+        </div>
+        <div class="glass-panel">
+            <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Total Books</h3>
+            <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">
+                {{ books | length }}
+            </div>
+        </div>
+        <div class="glass-panel">
+            <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Low Stock</h3>
+            <div style="font-size: 2rem; font-weight: 700; color: var(--danger);">
+                {{ books | selectattr("copies", "equalto", 0) | list | length }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+
+        <a href="{{ url_for('manage_books') }}" class="glass-panel card-hover"
+            style="text-decoration: none; display: block; transition: transform 0.2s;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">📚</div>
+            <h3 style="color: white; margin-bottom: 0.5rem;">Manage Inventory</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Add, edit, or remove books from the library
+                catalog.</p>
+        </a>
+
+        <a href="{{ url_for('manage_requests') }}" class="glass-panel card-hover"
+            style="text-decoration: none; display: block; transition: transform 0.2s;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🛎</div>
+            <h3 style="color: white; margin-bottom: 0.5rem;">Review Requests</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Approve or reject book requests from students.
+            </p>
+        </a>
+
+        <!-- Placeholder for future feature -->
+        <a href="{{ url_for('manage_students') }}" class="glass-panel card-hover"
+            style="text-decoration: none; display: block; transition: transform 0.2s;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">👥</div>
+            <h3 style="color: white; margin-bottom: 0.5rem;">Manage Students</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">View registered students, remove accounts, and
+                manage user access.</p>
+        </a>
+
+    </div>
+</div>
+
+<style>
+    .card-hover:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.08);
+    }
+</style>
+{% endblock %}

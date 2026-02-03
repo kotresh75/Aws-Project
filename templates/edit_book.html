@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 4rem;">
+
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="margin-bottom: 2rem;">
+            <a href="{{ url_for('manage_books') }}" style="color: var(--text-secondary); text-decoration: none;">&larr;
+                Back to Inventory</a>
+        </div>
+
+        <div class="glass-panel animate-fade-in" style="padding: 2.5rem;">
+            <h2 style="margin-bottom: 1.5rem;">Edit Book Details</h2>
+
+            <form action="{{ url_for('edit_book', book_id=book.id) }}" method="POST">
+                <div class="form-group" style="position: relative;">
+                    <label class="form-label">ISBN (Optional)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" name="isbn" id="isbnInput" class="form-control" value="{{ book.isbn or '' }}"
+                            placeholder="Enter ISBN">
+                        <button type="button" onclick="fetchBookDetails()" class="btn btn-outline"
+                            style="white-space: nowrap;">
+                            🔍 Fetch
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Book Title</label>
+                    <input type="text" name="title" id="titleInput" class="form-control" value="{{ book.title }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Cover Image URL</label>
+                    <input type="text" name="cover_url" id="coverInput" class="form-control"
+                        value="{{ book.cover_url or '' }}" placeholder="https://example.com/image.jpg">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Author</label>
+                        <input type="text" name="author" id="authorInput" class="form-control" value="{{ book.author }}"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <input type="text" name="category" id="categoryInput" class="form-control"
+                            value="{{ book.category }}" placeholder="Genre or Category">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Number of Copies</label>
+                    <input type="number" name="copies" class="form-control" value="{{ book.copies }}" min="0" required>
+                    <small style="color: var(--text-muted);">Adjusting this will update current stock.</small>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+                    <a href="{{ url_for('manage_books') }}" class="btn btn-outline"
+                        style="flex: 1; text-align: center;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function fetchBookDetails() {
+        const isbn = document.getElementById('isbnInput').value;
+        if (!isbn) {
+            showAlert("Input Required", "Please enter an ISBN first.");
+            return;
+        }
+
+        const btn = document.querySelector('button[onclick="fetchBookDetails()"]');
+        const originalText = btn.innerText;
+        btn.innerText = "⌛";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(`/api/fetch_book_details?isbn=${isbn}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('titleInput').value = data.title || '';
+                document.getElementById('authorInput').value = data.author || '';
+                document.getElementById('categoryInput').value = data.category || '';
+
+                if (data.cover_url) {
+                    document.getElementById('coverInput').value = data.cover_url;
+                } else {
+                    showAlert("Notice", "Book found, but no cover image is available in the database.");
+                }
+
+            } else {
+                showAlert("Error", data.error || "Book not found.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert("Connection Error", "Failed to fetch details. Please check your internet connection.");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

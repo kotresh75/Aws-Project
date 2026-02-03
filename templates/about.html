@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 6rem 2rem;">
+    <div style="max-width: 900px; margin: 0 auto;">
+
+        <!-- Hero Section -->
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">About <span class="text-gradient">GreenfieldLib</span>
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--text-muted);">Revolutionizing Access to Knowledge</p>
+        </div>
+
+        <!-- Overview Section -->
+        <div class="glass-panel animate-fade-in" style="margin-bottom: 3rem;">
+            <h2 style="color: var(--primary-color); margin-bottom: 1.5rem; font-size: 1.8rem;">Overview</h2>
+            <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
+                At Greenfield University, the BSC Computer Science department faced a critical challenge: a growing
+                student population and a finite supply of physical textbooks. The limited availability of library
+                resources led to long wait times and significant hurdles in accessing essential study materials.
+            </p>
+            <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.8;">
+                To address this, the University’s Cloud Solutions Department developed the <strong>Instant
+                    Library</strong>—a cutting-edge virtual platform. Built on Flask and designed for the cloud, the
+                system empowers students to register, log in, and request books seamlessly. It bridges the gap between
+                demand and supply, ensuring that every student has the resources they need to succeed.
+            </p>
+        </div>
+
+        <!-- Usage Scenarios -->
+        <div style="margin-bottom: 3rem;">
+            <h2 style="font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">Usage Scenarios</h2>
+
+            <div style="display: grid; gap: 2rem;">
+                <!-- Scenario 1 -->
+                <div class="glass-panel animate-slide-in" style="border-left: 4px solid var(--primary-color);">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: white;">1. Efficient Book Requests</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        Students can log in and instantly navigate to the catalog. If a required textbook is unavailable
+                        physically, they can submit a digital request. The system processes this in real-time, allowing
+                        the library to track demand and manage inventory efficiently during peak academic periods.
+                    </p>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="glass-panel animate-slide-in"
+                    style="border-left: 4px solid var(--success); animation-delay: 0.1s;">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: white;">2. Seamless Notifications</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        Communication is key. When a student requests a book, the system (powered conceptually by AWS
+                        SNS) triggers instant notifications. Students receive confirmation emails, and library staff get
+                        real-time alerts to fulfill requests, ensuring a transparent and responsive loop.
+                    </p>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="glass-panel animate-slide-in"
+                    style="border-left: 4px solid var(--accent-color); animation-delay: 0.2s;">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: white;">3. easy Access to Resources</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        The platform provides a centralized view of all library resources. Students can check
+                        availability status instantly. The robust backend ensures that even with hundreds of concurrent
+                        users, the experience remains smooth, fast, and uninterrupted.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features Grid -->
+        <div style="margin-bottom: 4rem;">
+            <h2 style="font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">Key Features</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                <div class="glass-panel" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📚</div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Book Catalog</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Complete digital index of all resources.</p>
+                </div>
+                <div class="glass-panel" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📋</div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Request System</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">One-click requests for unavailable items.
+                    </p>
+                </div>
+                <div class="glass-panel" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔔</div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Real-time Alerts</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Instant updates on request status.</p>
+                </div>
+                <div class="glass-panel" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚡</div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">High Performance</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Optimized for speed and reliability.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <div>
+            <h2 style="font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">Powered By</h2>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+                <div class="glass-panel" style="padding: 1.5rem; text-align: center; min-width: 140px; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🐍</div>
+                    <h4>Flask</h4>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Backend Framework</span>
+                </div>
+                <div class="glass-panel" style="padding: 1.5rem; text-align: center; min-width: 140px; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💻</div>
+                    <h4>Amazon EC2</h4>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Cloud Compute</span>
+                </div>
+                <div class="glass-panel" style="padding: 1.5rem; text-align: center; min-width: 140px; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🗄️</div>
+                    <h4>DynamoDB</h4>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">NoSQL Database</span>
+                </div>
+                <div class="glass-panel" style="padding: 1.5rem; text-align: center; min-width: 140px; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📨</div>
+                    <h4>Amazon SNS</h4>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Notifications</span>
+                </div>
+                <div class="glass-panel" style="padding: 1.5rem; text-align: center; min-width: 140px; flex: 1;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔐</div>
+                    <h4>IAM Roles</h4>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Secure Access</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

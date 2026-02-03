@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 4rem;">
+
+    <div class="glass-panel animate-fade-in" style="max-width: 700px; margin: 0 auto; padding: 3rem;">
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+            <div>
+                <h1 style="margin-bottom: 0.5rem; font-size: 2rem;">User <span class="text-gradient">Profile</span></h1>
+                <p style="color: var(--text-secondary);">Manage your account settings.</p>
+            </div>
+            <div
+                style="font-size: 3rem; background: rgba(255,255,255,0.1); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                👤
+            </div>
+        </div>
+
+        <div style="display: grid; gap: 2rem;">
+
+            <!-- User Info (Read Only) -->
+            <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-muted); font-size: 1rem;">Account Details</h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <label
+                            style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Full
+                            Name</label>
+                        <div style="font-size: 1.1rem; font-weight: 500;">{{ user.name }}</div>
+                    </div>
+                    <div>
+                        <label
+                            style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Email
+                            Address</label>
+                        <div style="font-size: 1.1rem; font-weight: 500;">{{ user.email }}</div>
+                    </div>
+                    <div>
+                        <label
+                            style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Role</label>
+                        <div
+                            style="display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; background: rgba(255,255,255,0.1); font-size: 0.9rem;">
+                            {{ user.role|title }}
+                        </div>
+                    </div>
+                    {% if user.role == 'student' %}
+                    <div>
+                        <label
+                            style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Student
+                            ID (Roll No)</label>
+                        <div style="font-size: 1.1rem; font-weight: 500;">{{ user.roll_no }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Change Password -->
+            <div>
+                <h3 style="margin-bottom: 1rem; color: var(--text-muted); font-size: 1rem;">Security</h3>
+                <form action="{{ url_for('profile') }}" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" name="current_password" class="form-control" placeholder="••••••••"
+                            required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" name="new_password" class="form-control" placeholder="••••••••"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" name="confirm_password" class="form-control" placeholder="••••••••"
+                                required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Password</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

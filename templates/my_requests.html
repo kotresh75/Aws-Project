@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 4rem;">
+
+    <div style="margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">My <span class="text-gradient">Requests</span></h1>
+        <p style="color: var(--text-secondary);">Track the status of your book requests.</p>
+    </div>
+
+    {% if my_requests|length == 0 %}
+    <div class="glass-panel" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+        <p>You haven't made any requests yet.</p>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary"
+            style="margin-top: 1rem; display: inline-block;">Browse Catalog</a>
+    </div>
+    {% else %}
+    <div class="glass-panel" style="padding: 0; overflow: hidden;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Date Requested</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in my_requests %}
+                <tr>
+                    <td>
+                        {% if req.book_cover %}
+                        <img src="{{ req.book_cover }}" alt="Cover"
+                            style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px;">
+                        {% else %}
+                        <div
+                            style="width: 40px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                            📖</div>
+                        {% endif %}
+                    </td>
+                    <td style="font-weight: 600;">{{ req.book_title }}</td>
+                    <td>{{ req.book_author }}</td>
+                    <td>{{ req.date }}</td>
+                    <td>
+                        {% if req.status == 'pending' %}
+                        <span class="badge"
+                            style="background: rgba(255, 179, 0, 0.1); color: var(--warning);">Pending</span>
+                        {% elif req.status == 'waitlisted' %}
+                        <span class="badge"
+                            style="background: rgba(255, 100, 0, 0.1); color: #ff8800;">Waitlisted</span>
+                        {% elif req.status == 'approved' %}
+                        <span class="badge"
+                            style="background: rgba(0, 255, 157, 0.1); color: var(--success);">Approved</span>
+                        {% elif req.status == 'returned' %}
+                        <span class="badge" style="background: rgba(0, 150, 255, 0.1); color: #0088ff;">Returned</span>
+                        {% elif req.status == 'rejected' %}
+                        <span class="badge"
+                            style="background: rgba(255, 0, 85, 0.1); color: var(--danger);">Rejected</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+
+<style>
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th {
+        text-align: left;
+        padding: 1.5rem;
+        color: var(--text-muted);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .data-table td {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}

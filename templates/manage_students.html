@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 120px; padding-bottom: 4rem;">
+    <div class="glass-panel animate-slide-in">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2><span class="text-gradient">Student Management</span></h2>
+            <div class="stats-badge">
+                Total Students: {{ students|length }}
+            </div>
+        </div>
+
+        {% if students %}
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Roll No</th>
+                        <th>Sem / Year</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="chat-avatar" style="width: 30px; height: 30px; font-size: 1rem;">👤</div>
+                                <span style="font-weight: 500;">{{ student['name'] }}</span>
+                            </div>
+                        </td>
+                        <td>{{ student['roll_no'] or '-' }}</td>
+                        <td>{{ student['semester'] }} / {{ student['year'] }}</td>
+                        <td style="opacity: 0.7;">{{ student['email'] }}</td>
+                        <td>
+                            <button class="btn-icon danger" data-name="{{ student['name'] }}"
+                                data-url="{{ url_for('delete_user', email=student['email']) }}"
+                                onclick="confirmDelete(this.dataset.name, this.dataset.url)" title="Remove Student">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+            <h3>No students registered yet.</h3>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function confirmDelete(name, url) {
+        showConfirm(
+            'Delete Student?',
+            'Are you sure you want to delete ' + name + '? This action cannot be undone.',
+            function () { window.location.href = url; }
+        );
+    }
+</script>
+
+<style>
+    .btn-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-icon:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-icon.danger:hover {
+        background: rgba(255, 0, 85, 0.2);
+        color: var(--danger);
+        border-color: var(--danger);
+    }
+
+    .stats-badge {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>
+{% endblock %}

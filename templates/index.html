@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section
+    style="position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; padding-top: 80px;">
+    <!-- Abstract Background -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;">
+        <div style="position: absolute; top: 10%; left: 10%; width: 400px; height: 400px; background: var(--primary-color); filter: blur(140px); opacity: 0.2; border-radius: 50%;"
+            class="animate-float"></div>
+        <div
+            style="position: absolute; bottom: 10%; right: 10%; width: 500px; height: 500px; background: var(--accent-color); filter: blur(160px); opacity: 0.2; border-radius: 50%; animation: float 6s ease-in-out infinite reverse;">
+        </div>
+    </div>
+
+    <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+        <div class="animate-fade-in" style="animation-delay: 0.2s;">
+            <h1 style="font-size: 4.5rem; letter-spacing: -2px; margin-bottom: 1.5rem; line-height: 1.1;">
+                Knowledge at <br>
+                <span class="text-gradient">Light Speed.</span>
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 500px;">
+                Experience the next generation of academic resource management. request books, track status, and study
+                smarter with Greenfield Instant Library.
+            </p>
+            <div style="display: flex; gap: 1.5rem;">
+                {% if not session.get('user') %}
+                <a href="{{ url_for('auth', mode='register') }}" class="btn btn-primary">Get Started</a>
+                {% else %}
+                <a href="{{ url_for('staff_dashboard') if session.get('role') == 'staff' else url_for('dashboard') }}"
+                    class="btn btn-primary">Go to Dashboard</a>
+                {% endif %}
+                <a href="{{ url_for('about') }}" class="btn btn-outline">Learn More</a>
+            </div>
+
+            <!-- Stats -->
+            <div style="margin-top: 4rem; display: flex; gap: 3rem;">
+                <div>
+                    <h3 class="text-gradient" style="font-size: 2rem;">1,200+</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Available Books</p>
+                </div>
+                <div>
+                    <h3 class="text-gradient" style="font-size: 2rem;">24/7</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Digital Access</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual/3D Element Placeholder -->
+        <div class="animate-fade-in" style="animation-delay: 0.4s; position: relative;">
+            <div class="glass-panel"
+                style="padding: 2rem; transform: rotate(-5deg); margin-left: 2rem; border-color: rgba(255,255,255,0.2);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                    <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                    </div>
+                    <div style="width: 100px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                    </div>
+                </div>
+                <div
+                    style="height: 150px; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0)); border-radius: 8px; margin-bottom: 1rem;">
+                </div>
+                <div
+                    style="height: 10px; width: 70%; background: var(--primary-color); border-radius: 5px; opacity: 0.5;">
+                </div>
+            </div>
+
+            <div class="glass-panel"
+                style="position: absolute; top: 100px; left: -50px; padding: 1.5rem; width: 280px; backdrop-filter: blur(20px);">
+                <h4 style="margin-bottom: 0.5rem;">New Arrival</h4>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">Introduction to
+                    Advanced Cloud Computing Patterns</p>
+                <div class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1rem; display: inline-block;">Reserve
+                    Now</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="container" style="padding: 6rem 2rem;">
+    <div style="text-align: center; margin-bottom: 5rem;" class="animate-on-scroll">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Redefining the Library</h2>
+        <p style="color: var(--text-secondary);">Powerful features designed for the modern student.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <!-- Feature 1 -->
+        <div class="glass-panel animate-on-scroll" style="transition: transform 0.3s;">
+            <div
+                style="width: 60px; height: 60px; background: rgba(0, 212, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--primary-color); font-size: 1.5rem;">
+                🔍</div>
+            <h3 style="margin-bottom: 1rem;">Instant Search</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">Find the exact resource you need in
+                milliseconds with our optimized catalog engine.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass-panel animate-on-scroll" style="transition: transform 0.3s; transition-delay: 0.1s;">
+            <div
+                style="width: 60px; height: 60px; background: rgba(121, 40, 202, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--accent-color); font-size: 1.5rem;">
+                ⚡</div>
+            <h3 style="margin-bottom: 1rem;">Fast Requests</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">One-click requesting system specifically built
+                to minimize wait times and admin friction.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass-panel animate-on-scroll" style="transition: transform 0.3s; transition-delay: 0.2s;">
+            <div
+                style="width: 60px; height: 60px; background: rgba(0, 255, 157, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--success); font-size: 1.5rem;">
+                🔔</div>
+            <h3 style="margin-bottom: 1rem;">Real-time Status</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">Stay updated with instant notifications on book
+                availability and request approvals.</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

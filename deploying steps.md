@@ -25,8 +25,7 @@ Go to **DynamoDB** → **Tables** → **Create Table** for each of the following
 | :--- | :--- | :--- |
 | `InstantLibrary_Users` | `email` | String (S) |
 | `InstantLibrary_Books` | `id` | String (S) |
-| `InstantLibrary_Requests`| `request_id` | String (S) |
-| `InstantLibrary_Notifications` | `id` | String (S) |
+| `InstantLibrary_Requests`| `id` | String (S) |
 | `InstantLibrary_OTP` | `email` | String (S) |
 
 **⚠️ Important for OTP Table:**
@@ -42,6 +41,17 @@ Go to **DynamoDB** → **Tables** → **Create Table** for each of the following
 4. Click **Create Subscription** → Protocol: **Email**.
 5. Endpoint: Enter your email (e.g., `veerkotresh@gmail.com`).
 6. **Check your Email Inbox** and click "Confirm Subscription".
+
+### Role-Based Subscription Configuration
+Configure subscriptions for your specific roles using the Filter Policies below:
+
+| Role | Email | Filter Policy (JSON) | Behavior |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `veerkotresh@gmail.com` | *(Leave Empty)* | **Receives Everything** (Broadcast). Login alerts, registrations, all user requests. |
+| **Staff** | `mykotresh@gmail.com` | `{"recipient": ["mykotresh@gmail.com"]}` | Receives only messages addressed to them (e.g., Book Requests assigned to staff, their own OTPs). |
+| **Student** | `kotreshoffical@gmail.com` | `{"recipient": ["kotreshoffical@gmail.com"]}` | Receives only their own interaction emails (Welcome, Request Updates, OTPs). |
+
+> **To Add Filter Policy**: Select the Subscription ID → click **Edit** → expand **Subscription filter policy** → paste the JSON.
 
 ## Step 4: Create & Attach IAM Role (Permissions)
 **Part A: Create Role**
@@ -66,19 +76,19 @@ sudo yum install -y python3 python3-pip git
 
 # 2. Download Code
 git clone https://github.com/kotresh75/Aws-Project.git
-cd Aws-Project/backend
+cd Aws-Project
 
 # 3. Install Requirements
 pip install -r requirements_aws.txt
 
 # 4. Configure App (Add SNS ARN & API Key)
-nano AWS_app.py
+nano app_aws.py
 
 # --- NANO EDITOR STEPS ---
-# 1. Use Arrow Keys to scroll down to line 36 (SNS_TOPIC_ARN).
+# 1. Use Arrow Keys to scroll down to line 18 (SNS_TOPIC_ARN).
 # 2. Delete the empty quotes ''.
 # 3. Paste your ARN inside quotes: 'arn:aws:sns:...' (Right-click to paste).
-# 4. Scroll down to line 39 (GEMINI_API_KEY).
+# 4. Scroll down to line 19 (GEMINI_API_KEY).
 # 5. Paste your API Key inside quotes like: 'AIzaSy...'
 # 6. Save & Exit:
 #    - Press Ctrl + O (Write Out)
@@ -87,8 +97,6 @@ nano AWS_app.py
 # -------------------------
 
 # 5. Run Server
-python3 AWS_app.py
+python3 app_aws.py
 ```
 
-3. **Open in Browser**: `http://YOUR_EC2_IP:5000`
-   - App will auto-create default users (`staff@gmail.com` / `student@gmail.com`).
