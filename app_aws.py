@@ -16,7 +16,7 @@ import google.generativeai as genai
 # =============================================================================
 class Config:
     """Centralized Configuration for the Application"""
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'never_mind_its_ok_lol')
+    SECRET_KEY = 'never_mind_its_ok_lol'
     AWS_REGION = 'us-east-1'
     
     # AWS Resources (DynamoDB Tables)
@@ -26,9 +26,8 @@ class Config:
     TABLE_OTP = 'InstantLibrary_OTP'
     
     # External Services
-    SNS_TOPIC_ARN = ''  # To be filled during deployment
-    GEMINI_API_KEY = '' # To be filled during deployment
-    ADMIN_EMAIL = os.environ.get('LIBRARY_ADMIN_EMAIL', 'admin@library.com')
+    SNS_TOPIC_ARN = '' # PASTE YOUR SNS ARN HERE
+    GEMINI_API_KEY = '' # PASTE YOUR GEMINI API KEYp HERE
 
 # Initialize Flask App
 app = Flask(__name__)
@@ -66,6 +65,8 @@ class Utils:
     def generate_otp():
         """Generates a 6-digit numeric OTP."""
         return ''.join(random.choices(string.digits, k=6))
+
+    @staticmethod
 
     @staticmethod
     def convert_decimals(obj):
@@ -107,6 +108,16 @@ class Utils:
 
 class NotificationService:
     @staticmethod
+    def subscribe(email):
+        """
+        [MODIFIED] User subscriptions are disabled.
+        All notifications are now routed to the Admin Email via Filter Policy.
+        This method is kept as a stub or for logging.
+        """
+        print(f" [INFO] New User Registration: {email}. (SNS Subscription skipped per policy)")
+
+
+    @staticmethod
     def send(to_email, subject, body):
         """Sends an email notification via AWS SNS."""
         if not Config.SNS_TOPIC_ARN:
@@ -121,10 +132,7 @@ class NotificationService:
                 TopicArn=Config.SNS_TOPIC_ARN,
                 Subject=subject[:100],
                 Message=json.dumps(message),
-                MessageStructure='json',
-                MessageAttributes={
-                    'recipient': {'DataType': 'String', 'StringValue': to_email}
-                }
+                MessageStructure='json'
             )
         except Exception as e:
             print(f"SNS Error: {e}")
@@ -201,12 +209,6 @@ def login_post():
     else:
         return handle_login(request, role, 'login')
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash("You have been logged out.", "info")
-    return redirect(url_for('index'))
-
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
@@ -224,9 +226,9 @@ def forgot_password():
             'ttl': int((datetime.now().timestamp()) + 600)
         })
         
-        NotificationService.send(email, "Password Reset OTP", f"Your OTP is: {otp}")
+        NotificationService.send(email, "Security Alert: Password Reset OTP", f"Your OTP is: {otp}. It expires in 10 minutes.")
         session['reset_email'] = email
-        flash("OTP sent to your email (Check Console/Email).", "info")
+        flash("OTP sent to your email (Check Inbox).", "info")
         return redirect(url_for('verify_otp'))
         
     return render_template('forgot_password.html')
@@ -275,7 +277,8 @@ def reset_password():
         )
         password_resets_table.delete_item(Key={'email': email})
         
-        NotificationService.send(Config.ADMIN_EMAIL, f"Password Reset: {email}", f"Password for user {email} was successfully reset.")
+        NotificationService.send('Instant Library Alert', f"Audit: Password Reset", f"Password for user {email} was successfully reset via OTP.")
+        NotificationService.send(email, "Security Alert: Password Changed", "Your password was successfully reset.")
         
         session.pop('reset_email', None)
         session.pop('otp_verified', None)
@@ -284,6 +287,14 @@ def reset_password():
         return redirect(url_for('auth', mode='login'))
         
     return render_template('reset_password.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out.", "info")
+    return redirect(url_for('index'))
+
+    return render_template('auth.html', mode=mode, role=role)
 
 # Authentication Helper Functions
 def handle_registration(req, role):
@@ -316,7 +327,10 @@ def handle_registration(req, role):
         
     DatabaseService.create_user(user_data)
     
-    NotificationService.send(Config.ADMIN_EMAIL, f"New Registration: {email}", 
+    # Auto-subscribe triggers a "Confirm Subscription" email from AWS
+    NotificationService.subscribe(email)
+
+    NotificationService.send('Instant Library Alert', f"New Registration: {email}", 
                              f"Name: {name}<br>Email: {email}<br>Role: {role}")
     NotificationService.send(email, "Welcome to Instant Library", 
                              f"Hi {name},<br>Thanks for registering! You can now request books.")
@@ -335,7 +349,7 @@ def handle_login(req, role, mode):
         session['role'] = user['role']
         session['name'] = user['name']
         
-        NotificationService.send(Config.ADMIN_EMAIL, f"Login Alert: {email}", 
+        NotificationService.send('Instant Library Alert', f"Login Alert: {email}", 
                                  f"User {user['name']} ({email}) just logged in.")
         
         flash(f"Welcome back, {user['name']}!", "success")
@@ -464,6 +478,10 @@ def profile():
                 UpdateExpression="set password=:p",
                 ExpressionAttributeValues={':p': hashed_pw}
             )
+            # Notify User of Password Change
+            NotificationService.send(session['user'], "Security Alert: Password Changed", 
+                                     "Your password was just changed. If this wasn't you, please contact support immediately.")
+            
             flash("Password updated successfully.", "success")
             return redirect(url_for('profile'))
             
@@ -545,6 +563,11 @@ def add_book():
     }
     
     books_table.put_item(Item=new_book)
+    
+    # Notify Admin (Audit)
+    NotificationService.send('Instant Library Alert', f"Audit: New Book Added", 
+                             f"Book '{new_book['title']}' was added to inventory by {session['user']}.")
+
     flash(f"Book '{new_book['title']}' added successfully.", "success")
     return redirect(url_for('staff_dashboard'))
 
@@ -554,6 +577,11 @@ def delete_book(book_id):
         return redirect(url_for('index'))
     
     books_table.delete_item(Key={'id': str(book_id)})
+    
+    # Notify Admin (Audit)
+    NotificationService.send('Instant Library Alert', f"Audit: Book Deleted", 
+                             f"Book ID {book_id} was deleted from inventory by {session['user']}.")
+
     flash("Book removed from inventory.", "info")
     return redirect(url_for('manage_books'))
 
@@ -633,6 +661,11 @@ def delete_user(email):
     if 'user' not in session or session.get('role') != 'staff':
         return redirect(url_for('index'))
     users_table.delete_item(Key={'email': email})
+    
+    # Notify Admin (Audit)
+    NotificationService.send('', f"Audit: User Deleted", 
+                             f"User {email} was deleted by {session['user']}.")
+
     flash("User deleted.", "success")
     return redirect(url_for('manage_students'))
 

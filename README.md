@@ -42,16 +42,17 @@ Go to **DynamoDB** → **Tables** → **Create Table** for each of the following
 5. Endpoint: Enter your email (e.g., `veerkotresh@gmail.com`).
 6. **Check your Email Inbox** and click "Confirm Subscription".
 
-### Role-Based Subscription Configuration
-Configure subscriptions for your specific roles using the Filter Policies below:
+### Simple Broadcast Configuration
+Since this application uses a **Broadcast Model**, you (the Admin) will receive all notifications.
 
-| Role | Email | Filter Policy (JSON) | Behavior |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `veerkotresh@gmail.com` | *(Leave Empty)* | **Receives Everything** (Broadcast). Login alerts, registrations, all user requests. |
-| **Staff** | `mykotresh@gmail.com` | `{"recipient": ["mykotresh@gmail.com"]}` | Receives only messages addressed to them (e.g., Book Requests assigned to staff, their own OTPs). |
-| **Student** | `kotreshoffical@gmail.com` | `{"recipient": ["kotreshoffical@gmail.com"]}` | Receives only their own interaction emails (Welcome, Request Updates, OTPs). |
+1.  **Skip Filter Policies**: You do NOT need to configure JSON filter policies.
+2.  **Verify Subscription**: Ensure your email is 'Confirmed' in the SNS Console.
+3.  **Result**: You will effectively act as the system monitor, receiving:
+    -   Student Registrations & Requests
+    -   Security Alerts (OTPs, Password Changes)
+    -   Audit Logs (Book/User Deletions)
 
-> **To Add Filter Policy**: Select the Subscription ID → click **Edit** → expand **Subscription filter policy** → paste the JSON.
+> **Note**: Students do not receive emails directly in this configuration. You can forward relevant emails if strictly necessary, but for this project scope, Admin visibility is the priority.
 
 ## Step 4: Create & Attach IAM Role (Permissions)
 **Part A: Create Role**
