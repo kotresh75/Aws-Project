@@ -35,35 +35,53 @@
         </div>
     </div>
 
-    <!-- Navigation Cards -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+</div>
 
-        <a href="{{ url_for('manage_books') }}" class="glass-panel card-hover"
-            style="text-decoration: none; display: block; transition: transform 0.2s;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">📚</div>
-            <h3 style="color: white; margin-bottom: 0.5rem;">Manage Inventory</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Add, edit, or remove books from the library
-                catalog.</p>
-        </a>
-
-        <a href="{{ url_for('manage_requests') }}" class="glass-panel card-hover"
-            style="text-decoration: none; display: block; transition: transform 0.2s;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🛎</div>
-            <h3 style="color: white; margin-bottom: 0.5rem;">Review Requests</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Approve or reject book requests from students.
-            </p>
-        </a>
-
-        <!-- Placeholder for future feature -->
-        <a href="{{ url_for('manage_students') }}" class="glass-panel card-hover"
-            style="text-decoration: none; display: block; transition: transform 0.2s;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">👥</div>
-            <h3 style="color: white; margin-bottom: 0.5rem;">Manage Students</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">View registered students, remove accounts, and
-                manage user access.</p>
-        </a>
-
+<!-- Analytics Charts -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem;">
+    <div class="glass-panel">
+        <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Most Popular Books</h3>
+        <div style="height: 250px; position: relative;">
+            <canvas id="popularityChart"></canvas>
+        </div>
     </div>
+    <div class="glass-panel">
+        <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Request Status</h3>
+        <div style="height: 250px; width: 100%; position: relative;">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+
+    <a href="{{ url_for('manage_books') }}" class="glass-panel card-hover"
+        style="text-decoration: none; display: block; transition: transform 0.2s;">
+        <div style="font-size: 2rem; margin-bottom: 1rem;">📚</div>
+        <h3 style="color: white; margin-bottom: 0.5rem;">Manage Inventory</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Add, edit, or remove books from the library
+            catalog.</p>
+    </a>
+
+    <a href="{{ url_for('manage_requests') }}" class="glass-panel card-hover"
+        style="text-decoration: none; display: block; transition: transform 0.2s;">
+        <div style="font-size: 2rem; margin-bottom: 1rem;">🛎</div>
+        <h3 style="color: white; margin-bottom: 0.5rem;">Review Requests</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Approve or reject book requests from students.
+        </p>
+    </a>
+
+    <!-- Placeholder for future feature -->
+    <a href="{{ url_for('manage_students') }}" class="glass-panel card-hover"
+        style="text-decoration: none; display: block; transition: transform 0.2s;">
+        <div style="font-size: 2rem; margin-bottom: 1rem;">👥</div>
+        <h3 style="color: white; margin-bottom: 0.5rem;">Manage Students</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">View registered students, remove accounts, and
+            manage user access.</p>
+    </a>
+
+</div>
 </div>
 
 <style>
@@ -72,4 +90,85 @@
         background: rgba(255, 255, 255, 0.08);
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/analytics')
+            .then(response => response.json())
+            .then(data => {
+                // Chart 1: Popularity (Bar)
+                new Chart(document.getElementById('popularityChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.popular_labels,
+                        datasets: [{
+                            label: 'Requests',
+                            data: data.popular_data,
+                            backgroundColor: 'rgba(0, 255, 157, 0.5)',
+                            borderColor: 'rgba(0, 255, 157, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { color: 'rgba(255,255,255,0.7)' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: 'rgba(255,255,255,0.7)' }
+                            }
+                        }
+                    }
+                });
+
+                // Chart 2: Status (Doughnut)
+                new Chart(document.getElementById('statusChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.status_labels,
+                        datasets: [{
+                            data: data.status_data,
+                            backgroundColor: [
+                                'rgba(255, 179, 0, 0.8)', // Pending (Yellow)
+                                'rgba(0, 255, 157, 0.8)', // Approved (Green)
+                                'rgba(255, 0, 85, 0.8)',  // Rejected (Red)
+                                'rgba(50, 50, 255, 0.8)'  // Returned (Blue)
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right', labels: { color: 'white', boxWidth: 10 } }
+                        }
+                    }
+                });
+            })
+            .catch(err => console.error("Error loading analytics:", err));
+
+        // Auto-trigger catalog population (checks for duplicates on backend)
+        fetch('/api/admin/populate')
+            .then(res => res.json())
+            .then(data => {
+                if (data.count && data.count > 0) {
+                    // Optional: Reload to see new books
+                    if (confirm(`System Update: ${data.message} Reload to see them?`)) {
+                        location.reload();
+                    }
+                } else {
+                    console.log("Catalog Check: " + data.message);
+                }
+            })
+            .catch(err => console.error("Populate Error:", err));
+    });
+</script>
 {% endblock %}

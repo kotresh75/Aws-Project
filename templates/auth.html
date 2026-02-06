@@ -71,6 +71,8 @@
             </div>
 
             <form action="{{ url_for('login_post') }}" method="POST">
+                <!-- CRITICAL FIX: Missing action field caused registration to fail -->
+                <input type="hidden" name="action" value="{{ mode }}">
                 <input type="hidden" name="role" value="{{ role }}">
                 <input type="hidden" name="mode" value="{{ mode }}">
 

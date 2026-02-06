@@ -21,22 +21,32 @@
 
     <!-- Inventory Table -->
     <div class="glass-panel" style="padding: 2rem;">
-        <table class="data-table">
+
+        <!-- Search Bar -->
+        <div style="margin-bottom: 1.5rem; position: relative;">
+            <input type="text" id="searchInput" onkeyup="filterTable()"
+                placeholder="Search books by title, author, or category..." class="form-control"
+                style="width: 100%; padding-left: 2.5rem;">
+            <span
+                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);">🔍</span>
+        </div>
+
+        <table class="data-table" id="booksTable">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Cover</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Category</th>
-                    <th>Copies</th>
-                    <th>Action</th>
+                    <th style="width: 8%;">ID</th>
+                    <th style="width: 8%;">Cover</th>
+                    <th style="width: 30%;">Title</th>
+                    <th style="width: 20%;">Author</th>
+                    <th style="width: 14%;">Category</th>
+                    <th style="width: 10%;">Copies</th>
+                    <th style="width: 10%;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for book in books %}
                 <tr>
-                    <td style="color: var(--text-muted);">#{{ book.id }}</td>
+                    <td style="color: var(--text-muted); white-space: nowrap;">#{{ book.id }}</td>
                     <td>
                         {% if book.cover_url %}
                         <img src="{{ book.cover_url }}" alt="Cover"
@@ -47,10 +57,10 @@
                             📖</div>
                         {% endif %}
                     </td>
-                    <td style="font-weight: 600;">{{ book.title }}</td>
-                    <td>{{ book.author }}</td>
-                    <td><span class="badge">{{ book.category }}</span></td>
-                    <td>
+                    <td style="font-weight: 600; white-space: nowrap;">{{ book.title }}</td>
+                    <td style="white-space: nowrap;">{{ book.author }}</td>
+                    <td><span class="badge" style="white-space: nowrap;">{{ book.category }}</span></td>
+                    <td style="white-space: nowrap;">
                         {% if book.copies > 0 %}
                         <span style="color: var(--success);">{{ book.copies }} In Stock</span>
                         {% else %}
@@ -196,6 +206,7 @@
     }
 
     async function fetchBookDetails() {
+        // ... (existing fetch logic) ...
         const isbn = document.getElementById('isbnInput').value;
         if (!isbn) {
             showAlert("Input Required", "Please enter an ISBN first.");
@@ -232,5 +243,48 @@
             btn.disabled = false;
         }
     }
+
+    function filterTable() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById('booksTable');
+        const tr = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < tr.length; i++) {
+            let found = false;
+            const cells = tr[i].getElementsByTagName('td');
+            // Check Title (2), Author (3), Category (4)
+            if (cells[2].innerText.toLowerCase().indexOf(filter) > -1 ||
+                cells[3].innerText.toLowerCase().indexOf(filter) > -1 ||
+                cells[4].innerText.toLowerCase().indexOf(filter) > -1) {
+                found = true;
+            }
+            tr[i].style.display = found ? "" : "none";
+        }
+    }
 </script>
+
+<style>
+    /* CSS for Fixed Layout Table */
+    .data-table {
+        width: 100%;
+        table-layout: fixed;
+        /* Crucial for equal widths / truncation */
+        border-collapse: collapse;
+    }
+
+    .data-table th,
+    .data-table td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: middle;
+        padding: 0.75rem;
+    }
+
+    /* Ensure action buttons don't get cut off weirdly */
+    .data-table td:last-child {
+        overflow: visible;
+    }
+</style>
 {% endblock %}

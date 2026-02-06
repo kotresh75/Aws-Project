@@ -66,14 +66,28 @@
             </div>
 
             <div class="glass-panel"
-                style="position: absolute; top: 100px; left: -50px; padding: 1.5rem; width: 280px; backdrop-filter: blur(20px);">
-                <h4 style="margin-bottom: 0.5rem;">New Arrival</h4>
-                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">Introduction to
-                    Advanced Cloud Computing Patterns</p>
-                <div class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1rem; display: inline-block;">Reserve
-                    Now</div>
+                style="position: absolute; top: 100px; left: -50px; padding: 1.5rem; width: 280px; backdrop-filter: blur(20px); z-index: 10;">
+                <h4 style="margin-bottom: 0.5rem;">Trending Now 🔥</h4>
+                {% if trending_book %}
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    "{{ trending_book.title }}"<br>by <em>{{ trending_book.author }}</em>
+                </p>
+                <!-- Only show button if user not logged in (since they're on landing) -->
+                <a href="{{ url_for('auth', mode='login') }}" class="btn-primary"
+                    style="font-size: 0.8rem; padding: 0.5rem 1rem; display: inline-block; text-decoration: none;">
+                    Check Availability
+                </a>
+                {% else %}
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    "The Art of Creative Coding"<br>by <em>Sarah Drasner</em>
+                </p>
+                <div class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1rem; display: inline-block;">
+                    Check Availability
+                </div>
+                {% endif %}
             </div>
         </div>
+    </div>
     </div>
 </section>
 

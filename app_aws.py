@@ -27,7 +27,7 @@ class Config:
     
     # External Services
     SNS_TOPIC_ARN = '' # PASTE YOUR SNS ARN HERE
-    GEMINI_API_KEY = '' # PASTE YOUR GEMINI API KEYp HERE
+    GEMINI_API_KEY = 'AIzaSyC5HXAe98Ep-c7DGTYMQGvioKJEWzXsB88'
 
 # Initialize Flask App
 app = Flask(__name__)
@@ -171,7 +171,19 @@ def index():
             session.clear()
             return render_template('index.html')
         return redirect(url_for('dashboard') if session.get('role') == 'student' else url_for('staff_dashboard'))
-    return render_template('index.html')
+    
+    # Feature a book on the landing page
+    trending_book = None
+    try:
+        # Scan limit to 50 efficient load
+        response = books_table.scan(Limit=50)
+        items = Utils.convert_decimals(response.get('Items', []))
+        if items:
+            trending_book = random.choice(items)
+    except Exception:
+        pass
+
+    return render_template('index.html', trending_book=trending_book)
 
 @app.route('/about')
 def about():
@@ -703,9 +715,175 @@ def fetch_book_details():
         print(f"Error fetching book: {e}")
         return jsonify({'error': 'Failed to fetch details'}), 500
 
+@app.route('/api/analytics')
+def analytics():
+    """Provides JSON data for Staff Dashboard Charts"""
+    if 'user' not in session or session.get('role') != 'staff':
+        return jsonify({'error': 'Unauthorized'}), 403
+        
+    try:
+        # 1. Fetch Data
+        books = Utils.convert_decimals(books_table.scan().get('Items', []))
+        requests = Utils.convert_decimals(requests_table.scan().get('Items', []))
+        all_books_map = {str(b['id']): b['title'] for b in books}
+        
+        # 2. Key Performance Indicators (KPIs)
+        total_books = len(books)
+        total_requests = len(requests)
+        pending_requests = len([r for r in requests if r['status'] == 'pending'])
+        low_stock = len([b for b in books if b['copies'] < 1])
+        
+        # 3. Chart 1: Most Popular Books (Request Count by Book Title)
+        book_counts = {}
+        for r in requests:
+            b_id = str(r['book_id'])
+            title = all_books_map.get(b_id, 'Unknown Book')
+            book_counts[title] = book_counts.get(title, 0) + 1
+            
+        # Sort top 5
+        sorted_books = sorted(book_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+        popular_labels = [x[0] for x in sorted_books]
+        popular_data = [x[1] for x in sorted_books]
+        
+        # 4. Chart 2: Request Status Distribution
+        status_counts = {}
+        for r in requests:
+            s = r.get('status', 'Unknown').capitalize()
+            status_counts[s] = status_counts.get(s, 0) + 1
+            
+        return jsonify({
+            'total_books': total_books,
+            'total_requests': total_requests,
+            'pending_requests': pending_requests,
+            'low_stock': low_stock,
+            'popular_labels': popular_labels,
+            'popular_data': popular_data,
+            'status_labels': list(status_counts.keys()),
+            'status_data': list(status_counts.values())
+        })
+        
+    except Exception as e:
+        print(f"Analytics Error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/recommendations')
+def recommendations():
+    """Returns AI-powered book recommendations based on user history"""
+    if 'user' not in session or session.get('role') != 'student':
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    try:
+        # Fetch Catalog & User History
+        all_books = Utils.convert_decimals(books_table.scan().get('Items', []))
+        user_requests = Utils.convert_decimals(requests_table.scan().get('Items', []))
+        
+        # Filter for current user
+        my_history = [r for r in user_requests if r['user_email'] == session['user']]
+        
+        # 1. Fallback Strategy (If no history or no API key)
+        if not Config.GEMINI_API_KEY or not my_history:
+            # Return 3 random books user hasn't requested yet
+            requested_ids = {r['book_id'] for r in my_history}
+            unread_books = [b for b in all_books if b['id'] not in requested_ids]
+            recommendations = random.sample(unread_books, min(3, len(unread_books)))
+            return jsonify({'source': 'random', 'books': recommendations})
+
+        # 2. AI Strategy (Gemini)
+        # Build Context
+        all_books_map = {b['id']: f"{b['title']} by {b['author']}" for b in all_books}
+        read_list = [all_books_map.get(r['book_id'], 'Unknown') for r in my_history]
+        read_str = ", ".join(read_list[:10]) # Limit to last 10
+        
+        # Prompt
+        prompt = f"""
+        I have read these books: {read_str}.
+        From the following library catalog, select 3 books I might like.
+        Catalog: {json.dumps(all_books_map)}
+        
+        Return ONLY a JSON array of book IDs, like: ["id1", "id2", "id3"]
+        """
+        
+        try:
+            genai.configure(api_key=Config.GEMINI_API_KEY)
+            model = genai.GenerativeModel('gemini-flash-latest')
+            response = model.generate_content(prompt)
+            
+            # Clean response (remove markdown code blocks)
+            text = response.text.replace('```json', '').replace('```', '').strip()
+            rec_ids = json.loads(text)
+            
+            recommendations = [b for b in all_books if b['id'] in rec_ids]
+            return jsonify({'source': 'ai', 'books': recommendations})
+            
+        except Exception as ai_error:
+            print(f"AI Error: {ai_error}")
+            # Fallback to random if AI fails
+            recommendations = random.sample(all_books, min(3, len(all_books)))
+            return jsonify({'source': 'fallback', 'books': recommendations})
+
+    except Exception as e:
+        print(f"Rec Error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/populate')
+def populate_catalog():
+    """Seeds the database with 500+ books from Open Library (Staff Only)"""
+    if 'user' not in session or session.get('role') != 'staff':
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    try:
+        # Guard Check: Don't populate if we already have data
+        existing_count = books_table.scan(Select='COUNT').get('Count', 0)
+        if existing_count > 50:
+            return jsonify({'success': True, 'count': 0, 'message': 'Catalog already populated.'})
+
+        subjects = ['science_fiction', 'adventure', 'history', 'programming', 'biology']
+        count = 0
+        
+        with books_table.batch_writer() as batch:
+            for subject in subjects:
+                try:
+                    # Use Search API to get ISBNs (fields: title, author, isbn, cover, key)
+                    url = f"https://openlibrary.org/search.json?subject={subject}&limit=100&fields=title,author_name,isbn,cover_i,key"
+                    resp = requests.get(url, timeout=10).json()
+                    
+                    for doc in resp.get('docs', []):
+                        try:
+                            title = doc.get('title', 'Unknown Title')
+                            author_name = doc.get('author_name', ['Unknown'])[0]
+                            
+                            # Get ISBN (first one found)
+                            isbn_list = doc.get('isbn', [])
+                            isbn = isbn_list[0] if isbn_list else "N/A"
+                            
+                            cover_id = doc.get('cover_i')
+                            cover_url = f"https://covers.openlibrary.org/b/id/{cover_id}-M.jpg" if cover_id else ""
+                            
+                            batch.put_item(Item={
+                                'id': f"ol_{doc['key'].split('/')[-1]}", 
+                                'title': title[:100], 
+                                'author': author_name,
+                                'category': subject.replace('_', ' ').capitalize(),
+                                'copies': random.randint(1, 10),
+                                'cover_url': cover_url,
+                                'isbn': isbn
+                            })
+                            count += 1
+                        except:
+                            continue
+                except Exception as e:
+                    print(f"Fetch Error ({subject}): {e}")
+                    continue
+        
+        return jsonify({'success': True, 'count': count, 'message': f'Successfully seeded {count} books with ISBNs.'})
+
+    except Exception as e:
+        print(f"Populate Error: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    if not model:
+    if not Config.GEMINI_API_KEY:
         return jsonify({'response': "AI functionality is not configured (Missing API Key)."})
         
     data = request.json
@@ -714,20 +892,58 @@ def chat():
     if not user_message:
         return jsonify({'response': "Please say something!"})
 
-    context = """
+    # 1. RAG: Search Database for context
+    db_context = ""
+    try:
+        # Simple keyword search strategy
+        keywords = [w for w in user_message.split() if len(w) > 3]
+        if keywords:
+            # We can't efficiently search "OR" in scan easily without complexity, 
+            # so we fetch a batch and filter in python for this MVP.
+            # Production would use proper Search Index (ElasticSearch/OpenSearch)
+            all_books = DatabaseService.get_all_books() # Warning: Scale limit, fine for demo (500 items)
+            
+            matches = []
+            for book in all_books:
+                # Check if any keyword matches title or author
+                b_str = f"{book['title']} {book['author']} {book['category']}".lower()
+                if any(k.lower() in b_str for k in keywords):
+                    matches.append(f"- {book['title']} by {book['author']} ({book['copies']} copies) [Category: {book['category']}]")
+            
+            if matches:
+                # Limit context to top 5 matches to save tokens
+                db_context = "Here are some relevant books found in the library catalog:\n" + "\n".join(matches[:5])
+            else:
+                db_context = "I searched the catalog but didn't find specific matches for those terms."
+    except Exception as e:
+        print(f"RAG Error: {e}")
+        db_context = "System Note: Database search unavailable."
+
+    context = f"""
     You are the intelligent assistant for the Instant Library System.
+    
+    Current Catalog Context:
+    {db_context}
+    
     System capabilities:
     - Search Catalog and request books.
     - Join Waitlist for out-of-stock items.
-    - Students get real-time email notifications.
+    
+    Instructions:
+    - Use the Catalog Context to answer availability questions.
+    - If a book is found in context, explicitly mention its copy count.
+    - If not found, suggest they browse the full catalog.
     """
     
     try:
-        chat_session = model.start_chat(history=[])
-        response = chat_session.send_message(f"{context}\nUser: {user_message}")
+        genai.configure(api_key=Config.GEMINI_API_KEY)
+        # Switch to generic latest alias (Safest for quotas)
+        model = genai.GenerativeModel('gemini-flash-latest')
+        response = model.generate_content(f"{context}\nUser: {user_message}")
         return jsonify({'response': response.text})
     except Exception as e:
-        return jsonify({'response': "I'm having trouble connecting to my brain right now."})
+        print(f"!!! GEMINI ERROR: {e}")
+        return jsonify({'response': f"I'm having trouble connecting to my brain right now. (Error: {str(e)[:50]}...)"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

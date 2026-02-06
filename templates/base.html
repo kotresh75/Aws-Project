@@ -18,6 +18,43 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/keyframes.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_css %}{% endblock %}
+    <style>
+        .quick-prompts {
+            padding: 8px 12px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.2);
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .quick-prompts::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Chrome */
+
+        .quick-prompts button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .quick-prompts button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 
 <body>
@@ -45,7 +82,52 @@
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     {% block extra_js %}{% endblock %}
+
+    <style>
+        /* Chat Content Styling */
+        .chat-messages p {
+            margin: 0 0 8px 0;
+        }
+
+        .chat-messages ul,
+        .chat-messages ol {
+            margin: 0 0 8px 20px;
+            padding: 0;
+        }
+
+        .chat-messages li {
+            margin-bottom: 4px;
+        }
+
+        .chat-messages h1,
+        .chat-messages h2,
+        .chat-messages h3 {
+            font-size: 1rem;
+            margin: 10px 0 5px 0;
+            font-weight: 700;
+        }
+
+        .chat-messages strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .chat-messages pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .chat-messages code {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
     <!-- Chat Widget -->
     <div class="chat-fab" onclick="toggleChat()">
         💬
@@ -67,6 +149,14 @@
                 Example: Hello! I'm your Greenfield Library AI. How can I help you today?
             </div>
         </div>
+
+        <!-- Quick Prompts -->
+        <div class="quick-prompts">
+            <button onclick="sendQuick('Recommend a classic book')">📜 Classic Book</button>
+            <button onclick="sendQuick('How do I request a book?')">❓ How to Request</button>
+            <button onclick="sendQuick('Show me popular books')">🔥 Popular Books</button>
+        </div>
+
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Ask about books..." onkeypress="handleEnter(event)">
             <button onclick="sendMessage()">➤</button>
@@ -144,6 +234,11 @@
             if (e.key === 'Enter') sendMessage();
         }
 
+        function sendQuick(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
+        }
+
         async function sendMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
@@ -178,13 +273,26 @@
         function addMessage(text, sender) {
             const div = document.createElement('div');
             div.className = `message ${sender}`;
-            div.textContent = text;
+
+            // Use Marked.js for proper Markdown rendering
+            if (typeof marked !== 'undefined') {
+                // Configure marked to handle line breaks properly
+                marked.setOptions({ breaks: true });
+                div.innerHTML = marked.parse(text);
+            } else {
+                div.textContent = text; // Fallback
+            }
+
             const id = Date.now();
             div.dataset.id = id;
 
             const container = document.getElementById('chatMessages');
             container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
+            // Scroll to bottom
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 50);
+
             return id;
         }
     </script>

@@ -101,3 +101,26 @@ nano app_aws.py
 python3 app_aws.py
 ```
 
+python3 app_aws.py
+```
+
+## Local Development (Mocked Environment)
+Want to test without spending money on AWS? Use the local mock server!
+
+**1. Install Mock Libs**
+```bash
+pip install flask boto3 moto requests google-generativeai
+```
+
+**2. Run Local Server**
+```bash
+python run_local.py
+```
+*   **Zero Config**: No AWS Keys required (uses `moto`).
+*   **Clean Slate**: Starts with an empty database.
+*   **AI**: Requires your `GEMINI_API_KEY` in `app_aws.py`.
+
+**3. First Time Setup (Local)**
+1.  Register a **Staff** user (e.g., `admin@test.com`).
+2.  Login -> Dashboard -> Click **"Populate Catalog"**.
+3.  Register a **Student** user to test requests.

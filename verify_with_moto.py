@@ -300,7 +300,9 @@ def run_verification():
         for i in range(50):
             email = f"stress_user_{i}@test.com"
             app_aws.users_table.put_item(Item={
-                'email': email, 'name': f'Stress User {i}', 'password': 'pw', 'role': 'student'
+                'email': email, 'name': f'Stress User {i}', 
+                'password': generate_password_hash('pw'), 
+                'role': 'student'
             })
             
         # Create 50 Books
@@ -385,8 +387,40 @@ def run_verification():
     # Moto might return 'running' or 'pending' immediately depending on version
     assert_true(instance.state['Name'] in ['running', 'pending'], "Instance State Valid")
 
-    # 9. VERIFY ALL CAPTURED SNS MESSAGES
-    print("\n[9] Verifying all Captured SNS Messages in SQS Inbox...")
+    # 10. VERIFY ANALYTICS API
+    print("\n[10] Verifying Utils (Analytics API)...")
+    with app_aws.app.test_client() as client:
+        # Need to login as staff first
+        client.post('/login', data={'action': 'login', 'email': 'staff@test.com', 'password': 'pw', 'role': 'staff'})
+        res = client.get('/api/analytics')
+        assert_true(res.status_code == 200, "Analytics API returns 200 OK")
+        
+        data = res.get_json()
+        print(f"    - Keys received: {list(data.keys())}")
+        assert_true('popular_labels' in data, "Contains 'popular_labels'")
+        assert_true('status_data' in data, "Contains 'status_data'")
+        assert_true(data['total_requests'] >= 50, "Data reflects stress test")
+
+    # 11. VERIFY RECOMMENDATION API
+    print("\n[11] Verifying AI Recommendations API...")
+    with app_aws.app.test_client() as client:
+        # Login as student
+        client.post('/login', data={'action': 'login', 'email': 'stress_user_0@test.com', 'password': 'pw', 'role': 'student'})
+        res = client.get('/api/recommendations')
+        assert_true(res.status_code == 200, "Recs API returns 200 OK")
+        
+        data = res.get_json()
+        print(f"    - Response Data: {data}")
+        print(f"    - Source: {data.get('source')}")
+        print(f"    - Books Returned: {len(data.get('books', []))}")
+        
+        assert_true('books' in data, "Contains 'books' list")
+        assert_true(len(data['books']) > 0, "Returned at least 1 book")
+        # In test env without API Key, source should likely be 'random' or 'fallback'
+        assert_true(data['source'] in ['random', 'fallback', 'ai'], "Valid Source Type")
+
+    # 12. SUMMARY
+    print("\n[12] SUMMARY OF RESULTS")
     
     all_messages = []
     while True:

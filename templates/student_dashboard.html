@@ -19,6 +19,17 @@
     <!-- CATALOG TAB -->
     <div id="catalog-tab" class="tab-content animate-fade-in">
 
+        <!-- AI Recommendations Section -->
+        <div id="recommendations-container" style="margin-bottom: 3rem; display: none;">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span id="rec-icon">✨</span> <span id="rec-title">Recommended for You</span>
+            </h2>
+            <div class="book-grid" id="rec-grid">
+                <!-- Recommended books injected here -->
+            </div>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem;">
+        </div>
+
         <!-- Search Bar -->
         <div style="margin-bottom: 2rem; position: relative;">
             <input type="text" id="searchInput" onkeyup="filterBooks()"
@@ -94,22 +105,22 @@
                 Catalog</button>
         </div>
         {% else %}
-        <div class="glass-panel" style="padding: 0; overflow: hidden;">
-            <table class="data-table">
+        <div class="glass-panel" style="padding: 0; overflow-x: auto;">
+            <table class="data-table" style="min-width: 600px;">
                 <thead>
                     <tr>
-                        <th>Book Title</th>
-                        <th>Author</th>
-                        <th>Date Requested</th>
-                        <th>Status</th>
+                        <th style="white-space: nowrap;">Book Title</th>
+                        <th style="white-space: nowrap;">Author</th>
+                        <th style="white-space: nowrap;">Date Requested</th>
+                        <th style="white-space: nowrap;">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for req in my_requests %}
                     <tr>
-                        <td style="font-weight: 600;">{{ req.book_title }}</td>
-                        <td>{{ req.book_author }}</td>
-                        <td>{{ req.date }}</td>
+                        <td style="font-weight: 600; white-space: nowrap;">{{ req.book_title }}</td>
+                        <td style="white-space: nowrap;">{{ req.book_author }}</td>
+                        <td style="white-space: nowrap;">{{ req.date }}</td>
                         <td>
                             {% if req.status == 'pending' %}
                             <span class="badge"
@@ -243,5 +254,51 @@
 
         document.getElementById('noResults').style.display = hasVisible ? "none" : "block";
     }
+
+    // Load Recommendations
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/recommendations')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error || !data.books || data.books.length === 0) return;
+
+                const container = document.getElementById('recommendations-container');
+                const grid = document.getElementById('rec-grid');
+
+                // Adjust Title based on Source
+                if (data.source === 'ai') {
+                    document.getElementById('rec-title').textContent = "AI Picks for You";
+                    document.getElementById('rec-icon').textContent = "🤖";
+                } else {
+                    document.getElementById('rec-title').textContent = "Trending Suggestions";
+                    document.getElementById('rec-icon').textContent = "🔥";
+                }
+
+                // Render Books (Simplified Code Reuse)
+                data.books.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-panel book-card';
+                    card.style.border = '1px solid var(--primary-color)'; // Highlight
+
+                    // Construct HTML (Simplified for JS injection)
+                    card.innerHTML = `
+                    <div style="margin-bottom: 1rem; position: relative;">
+                        ${book.cover_url ?
+                            `<img src="${book.cover_url}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">` :
+                            `<div style="width: 100%; height: 200px; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">📖</div>`
+                        }
+                        <span class="badge" style="background: rgba(0,0,0,0.6); position: absolute; top: 10px; right: 10px;">${book.category}</span>
+                    </div>
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author" style="color: var(--text-muted); margin-bottom: 1rem;">by ${book.author}</p>
+                    <a href="/request_book/${book.id}" class="btn btn-primary" style="margin-top: auto; width: 100%; text-align: center;">Request Now</a>
+                `;
+                    grid.appendChild(card);
+                });
+
+                container.style.display = 'block';
+            })
+            .catch(err => console.log("Rec Error:", err));
+    });
 </script>
 {% endblock %}
