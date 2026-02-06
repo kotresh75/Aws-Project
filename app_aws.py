@@ -67,8 +67,6 @@ class Utils:
         return ''.join(random.choices(string.digits, k=6))
 
     @staticmethod
-
-    @staticmethod
     def convert_decimals(obj):
         """Recursively converts DynamoDB Decimal types to int/float for JSON serialization."""
         if isinstance(obj, list):
