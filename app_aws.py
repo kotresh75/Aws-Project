@@ -27,7 +27,7 @@ class Config:
     
     # External Services
     SNS_TOPIC_ARN = '' # PASTE YOUR SNS ARN HERE
-    GEMINI_API_KEY = 'AIzaSyC5HXAe98Ep-c7DGTYMQGvioKJEWzXsB88'
+    GEMINI_API_KEY = ''
 
 # Initialize Flask App
 app = Flask(__name__)
