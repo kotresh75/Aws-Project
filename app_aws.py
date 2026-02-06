@@ -107,12 +107,19 @@ class Utils:
 class NotificationService:
     @staticmethod
     def subscribe(email):
-        """
-        [MODIFIED] User subscriptions are disabled.
-        All notifications are now routed to the Admin Email via Filter Policy.
-        This method is kept as a stub or for logging.
-        """
-        print(f" [INFO] New User Registration: {email}. (SNS Subscription skipped per policy)")
+        """Subscribes a user's email to the SNS Topic."""
+        if not Config.SNS_TOPIC_ARN:
+             return
+
+        try:
+            sns_client.subscribe(
+                TopicArn=Config.SNS_TOPIC_ARN,
+                Protocol='email',
+                Endpoint=email
+            )
+            print(f" [INFO] SNS Subscription Request sent to {email}")
+        except Exception as e:
+            print(f" [ERROR] SNS Subscribe Failed: {e}")
 
 
     @staticmethod
@@ -123,8 +130,15 @@ class NotificationService:
             return
 
         try:
-            html_body = Utils.generate_email_html(subject, body)
-            message = {"default": body, "email": html_body}
+            # SNS 'email' protocol sends raw text. HTML is not supported effectively.
+            # We convert our body to plain text for readability.
+            plain_text = body.replace('<br>', '\n').replace('<br/>', '\n')
+            
+            # Simple strip of other tags if any (basic approach)
+            import re
+            plain_text = re.sub('<[^<]+?>', '', plain_text)
+
+            message = {"default": plain_text, "email": plain_text}
             
             sns_client.publish(
                 TopicArn=Config.SNS_TOPIC_ARN,
